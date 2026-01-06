@@ -130,32 +130,6 @@
 						<span v-if="isSidebarOpen" class="ml-3">Rapports</span>
 					</NuxtLink>
 				</li>
-				<li>
-					<NuxtLink
-						to="/organisations"
-						:title="isSidebarOpen ? 'Organisations' : 'Organisations'"
-						class="flex items-center p-2 text-gray-900 rounded-lg dark:text-white hover:bg-gray-100 dark:hover:bg-gray-800 group"
-						:class="{
-							'bg-gray-100 dark:bg-gray-800': $route.path === '/organisations',
-						}"
-					>
-						<svg
-							class="w-5 h-5 text-gray-500 transition duration-75 dark:text-gray-400 group-hover:text-gray-900 dark:group-hover:text-white"
-							aria-hidden="true"
-							xmlns="http://www.w3.org/2000/svg"
-							fill="currentColor"
-							viewBox="0 0 20 20"
-						>
-							<path
-								d="M18 5h-.7c.229-.467.349-.98.351-1.5a3.5 3.5 0 0 0-3.5-3.5c-1.717 0-3.215 1.2-4.331 2.481C8.4.842 6.949 0 5.5 0A3.5 3.5 0 0 0 2 3.5c.003.52.123 1.033.351 1.5H2a2 2 0 0 0-2 2v3a1 1 0 0 0 1 1h18a1 1 0 0 0 1-1V7a2 2 0 0 0-2-2ZM8.058 5H5.5a1.5 1.5 0 1 1 0-3 1.5 1.5 0 0 1 0 3h3a1 1 0 0 1-.274.058L8 5.5 8.058 5Zm6.1 0h-3a1 1 0 0 1-.274-.058L11 5.5l.058-.5h3a1.5 1.5 0 1 1 0 3ZM18 9H2v2h16V9Z"
-							/>
-							<path
-								d="M17.5 13.5h-1.586a1 1 0 0 0-.707.293l-1.353 1.353a1 1 0 0 1-.707.293h-1.586a1 1 0 0 1-.707-.293l-1.353-1.353a1 1 0 0 0-.707-.293H6.5A1.5 1.5 0 0 0 5 15v4.5A1.5 1.5 0 0 0 6.5 21h11a1.5 1.5 0 0 0 1.5-1.5V15a1.5 1.5 0 0 0-1.5-1.5Z"
-							/>
-						</svg>
-						<span v-if="isSidebarOpen" class="ml-3">Organisations</span>
-					</NuxtLink>
-				</li>
 			</ul>
 
 			<!-- Section Admin (en bas) -->
