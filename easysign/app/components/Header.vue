@@ -59,16 +59,6 @@
 							>EasySign</span
 						>
 					</div>
-
-					<!-- Titre de la page actuelle (visible uniquement sur desktop) -->
-					<div class="hidden lg:block ml-4">
-						<h1 class="text-xl font-semibold text-gray-800 dark:text-white">
-							{{ pageTitle }}
-						</h1>
-						<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-							{{ pageSubtitle }}
-						</p>
-					</div>
 				</div>
 
 				<!-- Droite du header -->
