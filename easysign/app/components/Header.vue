@@ -1,0 +1,375 @@
+<template>
+	<header
+		:class="[
+			'sticky top-0 z-30 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-700 transition-all duration-300 h-16',
+			isSidebarOpen ? 'lg:pl-64' : 'lg:pl-20',
+		]"
+	>
+		<div class="h-full px-4">
+			<div class="h-full flex items-center justify-between">
+				<!-- Gauche du header -->
+				<div class="flex items-center">
+					<!-- Menu Burger pour mobile ET desktop -->
+					<button
+						@click="$emit('toggle-sidebar')"
+						type="button"
+						class="inline-flex items-center p-2 text-gray-500 rounded-lg hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-gray-200 dark:text-gray-400 dark:hover:bg-gray-700 dark:focus:ring-gray-600"
+					>
+						<span class="sr-only">Ouvrir/fermer le menu</span>
+						<!-- Icône de burger -->
+						<svg
+							v-if="!isSidebarOpen"
+							class="w-6 h-6"
+							aria-hidden="true"
+							fill="currentColor"
+							viewBox="0 0 20 20"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								fill-rule="evenodd"
+								d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+								clip-rule="evenodd"
+							></path>
+						</svg>
+						<!-- Icône de fermeture quand la sidebar est ouverte -->
+						<svg
+							v-else
+							class="w-6 h-6"
+							aria-hidden="true"
+							fill="currentColor"
+							viewBox="0 0 20 20"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								fill-rule="evenodd"
+								d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
+								clip-rule="evenodd"
+							></path>
+						</svg>
+					</button>
+
+					<!-- Logo pour mobile -->
+					<div class="lg:hidden flex items-center ml-3">
+						<div
+							class="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center"
+						>
+							<span class="text-white font-bold text-lg">E</span>
+						</div>
+						<span class="ml-2 text-lg font-semibold dark:text-white"
+							>EasySign</span
+						>
+					</div>
+
+					<!-- Titre de la page actuelle (visible uniquement sur desktop) -->
+					<div class="hidden lg:block ml-4">
+						<h1 class="text-xl font-semibold text-gray-800 dark:text-white">
+							{{ pageTitle }}
+						</h1>
+						<p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+							{{ pageSubtitle }}
+						</p>
+					</div>
+				</div>
+
+				<!-- Droite du header -->
+				<div class="flex items-center space-x-4">
+					<!-- Switch clair/sombre -->
+					<button
+						@click="toggleDarkMode"
+						type="button"
+						class="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 rounded-lg text-sm p-2.5"
+					>
+						<svg
+							v-if="darkMode"
+							class="w-5 h-5"
+							fill="currentColor"
+							viewBox="0 0 20 20"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M10 2a1 1 0 011 1v1a1 1 0 11-2 0V3a1 1 0 011-1zm4 8a4 4 0 11-8 0 4 4 0 018 0zm-.464 4.95l.707.707a1 1 0 001.414-1.414l-.707-.707a1 1 0 00-1.414 1.414zm2.12-10.607a1 1 0 010 1.414l-.706.707a1 1 0 11-1.414-1.414l.707-.707a1 1 0 011.414 0zM17 11a1 1 0 100-2h-1a1 1 0 100 2h1zm-7 4a1 1 0 011 1v1a1 1 0 11-2 0v-1a1 1 0 011-1zM5.05 6.464A1 1 0 106.465 5.05l-.708-.707a1 1 0 00-1.414 1.414l.707.707zm1.414 8.486l-.707.707a1 1 0 01-1.414-1.414l.707-.707a1 1 0 011.414 1.414zM4 11a1 1 0 100-2H3a1 1 0 000 2h1z"
+								clip-rule="evenodd"
+							></path>
+						</svg>
+						<svg
+							v-else
+							class="w-5 h-5"
+							fill="currentColor"
+							viewBox="0 0 20 20"
+							xmlns="http://www.w3.org/2000/svg"
+						>
+							<path
+								d="M17.293 13.293A8 8 0 016.707 2.707a8.001 8.001 0 1010.586 10.586z"
+							></path>
+						</svg>
+					</button>
+
+					<!-- Avatar et menu déroulant -->
+					<div class="relative">
+						<button
+							ref="userMenuButton"
+							@click="toggleUserMenu"
+							type="button"
+							class="flex items-center focus:outline-none"
+							id="user-menu-button"
+						>
+							<div
+								class="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center"
+							>
+								<span class="text-white font-bold">A</span>
+							</div>
+							<div class="hidden md:block ml-3 text-left">
+								<div class="text-sm font-medium text-gray-900 dark:text-white">
+									Admin Principal
+								</div>
+								<div class="text-xs text-gray-500 dark:text-gray-400">
+									Administrateur
+								</div>
+							</div>
+							<svg
+								class="w-4 h-4 ml-2 text-gray-500 dark:text-gray-400"
+								fill="currentColor"
+								viewBox="0 0 20 20"
+								xmlns="http://www.w3.org/2000/svg"
+							>
+								<path
+									fill-rule="evenodd"
+									d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+									clip-rule="evenodd"
+								></path>
+							</svg>
+						</button>
+
+						<!-- Menu déroulant utilisateur -->
+						<transition
+							enter-active-class="transition duration-100 ease-out"
+							enter-from-class="transform scale-95 opacity-0"
+							enter-to-class="transform scale-100 opacity-100"
+							leave-active-class="transition duration-75 ease-in"
+							leave-from-class="transform scale-100 opacity-100"
+							leave-to-class="transform scale-95 opacity-0"
+						>
+							<div
+								v-if="isUserMenuOpen"
+								ref="userMenu"
+								class="absolute right-0 mt-2 w-72 bg-white dark:bg-gray-800 rounded-lg shadow-lg py-2 border border-gray-200 dark:border-gray-700 z-40"
+							>
+								<!-- En-tête du menu -->
+								<div
+									class="px-4 py-3 border-b border-gray-200 dark:border-gray-700"
+								>
+									<div class="flex items-center">
+										<div
+											class="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center"
+										>
+											<span class="text-white font-bold text-lg">A</span>
+										</div>
+										<div class="ml-3">
+											<div
+												class="text-sm font-semibold text-gray-900 dark:text-white"
+											>
+												Admin Principal
+											</div>
+											<div class="text-xs text-gray-500 dark:text-gray-400">
+												Administrateur
+											</div>
+											<div
+												class="text-xs text-gray-500 dark:text-gray-400 mt-1"
+											>
+												admin@example.com
+											</div>
+										</div>
+									</div>
+								</div>
+
+								<!-- Options du menu -->
+								<ul class="py-2">
+									<li>
+										<a
+											href="#"
+											class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
+											@click="closeUserMenu"
+										>
+											<svg
+												class="w-4 h-4 mr-3"
+												fill="currentColor"
+												viewBox="0 0 20 20"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path
+													fill-rule="evenodd"
+													d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+													clip-rule="evenodd"
+												></path>
+											</svg>
+											Mon Profil
+										</a>
+									</li>
+									<li>
+										<a
+											href="#"
+											class="flex items-center px-4 py-2 text-sm text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
+											@click="closeUserMenu"
+										>
+											<svg
+												class="w-4 h-4 mr-3"
+												fill="currentColor"
+												viewBox="0 0 20 20"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path
+													fill-rule="evenodd"
+													d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
+													clip-rule="evenodd"
+												></path>
+											</svg>
+											Paramètres
+										</a>
+									</li>
+									<li
+										class="border-t border-gray-200 dark:border-gray-700 mt-2 pt-2"
+									>
+										<a
+											href="#"
+											class="flex items-center px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
+											@click="closeUserMenu"
+										>
+											<svg
+												class="w-4 h-4 mr-3"
+												fill="currentColor"
+												viewBox="0 0 20 20"
+												xmlns="http://www.w3.org/2000/svg"
+											>
+												<path
+													fill-rule="evenodd"
+													d="M3 3a1 1 0 00-1 1v12a1 1 0 102 0V4a1 1 0 00-1-1zm10.293 9.293a1 1 0 001.414 1.414l3-3a1 1 0 000-1.414l-3-3a1 1 0 10-1.414 1.414L14.586 9H7a1 1 0 100 2h7.586l-1.293 1.293z"
+													clip-rule="evenodd"
+												></path>
+											</svg>
+											Déconnexion
+										</a>
+									</li>
+								</ul>
+							</div>
+						</transition>
+					</div>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<!-- Overlay pour le menu utilisateur -->
+	<transition
+		enter-active-class="transition-opacity ease-linear duration-100"
+		enter-from-class="opacity-0"
+		enter-to-class="opacity-100"
+		leave-active-class="transition-opacity ease-linear duration-100"
+		leave-from-class="opacity-100"
+		leave-to-class="opacity-0"
+	>
+		<div
+			v-if="isUserMenuOpen"
+			class="fixed inset-0 z-20"
+			@click="closeUserMenu"
+		></div>
+	</transition>
+</template>
+
+<script setup>
+	import { ref, onMounted, onUnmounted, computed } from "vue";
+	import { useRoute } from "vue-router";
+
+	const route = useRoute();
+	const isUserMenuOpen = ref(false);
+	const darkMode = ref(false);
+	const userMenuButton = ref(null);
+	const userMenu = ref(null);
+
+	// Props
+	const props = defineProps({
+		isSidebarOpen: {
+			type: Boolean,
+			default: true,
+		},
+	});
+
+	// Calculer le titre de la page en fonction de la route
+	const pageTitle = computed(() => {
+		const routeNames = {
+			"/": "Tableau de bord",
+			"/dashboard": "Tableau de bord",
+			"/personnel": "Gestion du personnel",
+			"/presences": "Suivi des présences",
+			"/rapports": "Rapports et statistiques",
+			"/organisations": "Organisations",
+		};
+		return routeNames[route.path] || "Tableau de bord";
+	});
+
+	const pageSubtitle = computed(() => {
+		const subtitles = {
+			"/": "Vue d'ensemble de votre activité",
+			"/dashboard": "Vue d'ensemble de votre activité",
+			"/personnel": "Gérez votre équipe",
+			"/presences": "Suivez les présences en temps réel",
+			"/rapports": "Analysez vos données",
+			"/organisations": "Gérez vos structures",
+		};
+		return subtitles[route.path] || "Tableau de bord";
+	});
+
+	const toggleUserMenu = () => {
+		isUserMenuOpen.value = !isUserMenuOpen.value;
+	};
+
+	const closeUserMenu = () => {
+		isUserMenuOpen.value = false;
+	};
+
+	const toggleDarkMode = () => {
+		darkMode.value = !darkMode.value;
+
+		if (darkMode.value) {
+			document.documentElement.classList.add("dark");
+			localStorage.setItem("theme", "dark");
+		} else {
+			document.documentElement.classList.remove("dark");
+			localStorage.setItem("theme", "light");
+		}
+	};
+
+	// Vérifier le thème au chargement
+	onMounted(() => {
+		const savedTheme = localStorage.getItem("theme");
+		const prefersDark = window.matchMedia(
+			"(prefers-color-scheme: dark)",
+		).matches;
+
+		if (savedTheme === "dark" || (!savedTheme && prefersDark)) {
+			darkMode.value = true;
+			document.documentElement.classList.add("dark");
+		}
+
+		// Fermer le menu si on clique en dehors
+		document.addEventListener("click", handleClickOutside);
+	});
+
+	onUnmounted(() => {
+		document.removeEventListener("click", handleClickOutside);
+	});
+
+	// Gérer le clic en dehors du menu utilisateur
+	const handleClickOutside = (event) => {
+		if (
+			isUserMenuOpen.value &&
+			userMenuButton.value &&
+			!userMenuButton.value.contains(event.target) &&
+			userMenu.value &&
+			!userMenu.value.contains(event.target)
+		) {
+			closeUserMenu();
+		}
+	};
+
+	defineEmits(["toggle-sidebar"]);
+</script>
