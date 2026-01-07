@@ -16,42 +16,35 @@
 
 			<form @submit.prevent="handleLogin" class="space-y-6">
 				<div>
-					<label
-						class="block text-sm font-medium text-gray-700 mb-2"
-						for="email"
-					>
+					<label class="block text-sm font-medium text-gray-700 mb-2">
 						Email
 					</label>
 					<input
 						v-model="email"
 						type="email"
-						id="email"
-						class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004aad] focus:border-transparent"
-						placeholder="admin@example.com"
+						class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004aad]"
 						required
 					/>
 				</div>
+
 				<div>
-					<label
-						class="block text-sm font-medium text-gray-700 mb-2"
-						for="password"
-					>
+					<label class="block text-sm font-medium text-gray-700 mb-2">
 						Mot de passe
 					</label>
 					<input
 						v-model="password"
 						type="password"
-						id="password"
-						class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#004aad] focus:border-transparent"
-						placeholder="••••••••"
+						class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-[#004aad]"
 						required
 					/>
 				</div>
+
 				<button
 					type="submit"
-					class="w-full bg-[#004aad] text-white font-medium py-3 rounded-lg hover:bg-blue-700 transition-colors duration-200"
+					:disabled="loading"
+					class="w-full bg-[#004aad] text-white font-medium py-3 rounded-lg hover:bg-blue-700 transition disabled:opacity-50"
 				>
-					Se connecter
+					{{ loading ? "Connexion..." : "Se connecter" }}
 				</button>
 			</form>
 		</div>
@@ -60,16 +53,30 @@
 
 <script setup>
 	import { ref } from "vue";
+	import { useAuthStore } from "../../stores/auth";
+
+	const auth = useAuthStore();
 
 	const email = ref("");
 	const password = ref("");
 	const errorMessage = ref("");
+	const loading = ref(false);
 
 	const handleLogin = async () => {
-		// Votre logique de connexion ici
+		errorMessage.value = "";
+		loading.value = true;
+
+		try {
+			await auth.login(email.value, password.value);
+			await navigateTo("/dashboard");
+		} catch (e) {
+			errorMessage.value = e.message || "Erreur inconnue";
+		} finally {
+			loading.value = false;
+		}
 	};
 
 	definePageMeta({
-		layout: "",
+		layout: false,
 	});
 </script>

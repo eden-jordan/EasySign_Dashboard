@@ -1,23 +1,25 @@
 {
-  "name": "easysign",
-  "type": "module",
-  "private": true,
-  "scripts": {
-    "build": "nuxt build",
-    "dev": "nuxt dev",
-    "generate": "nuxt generate",
-    "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
-  },
-  "dependencies": {
-    "@heroicons/vue": "^2.2.0",
-    "@tailwindcss/vite": "^4.1.18",
-    "nuxt": "^4.2.2",
-    "tailwindcss": "^4.1.18",
-    "vue": "^3.5.26",
-    "vue-router": "^4.6.4"
-  },
-  "devDependencies": {
-    "@types/node": "^25.0.3"
-  }
+	"name": "easysign",
+	"type": "module",
+	"private": true,
+	"scripts": {
+		"build": "nuxt build",
+		"dev": "nuxt dev",
+		"generate": "nuxt generate",
+		"preview": "nuxt preview",
+		"postinstall": "nuxt prepare"
+	},
+	"dependencies": {
+		"@heroicons/vue": "^2.2.0",
+		"@pinia/nuxt": "^0.11.3",
+		"@tailwindcss/vite": "^4.1.18",
+		"nuxt": "^4.2.2",
+		"pinia": "^3.0.4",
+		"tailwindcss": "^4.1.18",
+		"vue": "latest",
+		"vue-router": "^4.6.4"
+	},
+	"devDependencies": {
+		"@types/node": "^25.0.3"
+	}
 }

@@ -639,5 +639,7 @@
 </template>
 
 <script setup>
-	// Code pour les interactions si nécessaire
+	definePageMeta({
+		middleware: "auth",
+	});
 </script>

@@ -826,6 +826,10 @@
 			window.location.reload();
 		}, 500);
 	};
+
+	definePageMeta({
+		middleware: "auth",
+	});
 </script>
 
 <style scoped>
