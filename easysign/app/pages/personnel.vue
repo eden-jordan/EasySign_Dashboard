@@ -63,28 +63,6 @@
 							placeholder="Rechercher un employé..."
 						/>
 					</div>
-
-					<!-- Filtre département -->
-					<select
-						class="w-full md:w-[200px] bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-base rounded-lg focus:ring-[#004aad] focus:border-[#004aad] p-3"
-					>
-						<option selected>Tous les départements</option>
-						<option>RH</option>
-						<option>IT</option>
-						<option>Marketing</option>
-						<option>Ventes</option>
-						<option>Support</option>
-					</select>
-
-					<!-- Filtre statut -->
-					<select
-						class="w-full md:w-[150px] bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-base rounded-lg focus:ring-[#004aad] focus:border-[#004aad] p-3"
-					>
-						<option selected>Tous les statuts</option>
-						<option>Actif</option>
-						<option>Inactif</option>
-						<option>Congé</option>
-					</select>
 				</div>
 			</div>
 
@@ -104,31 +82,20 @@
 									scope="col"
 									class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
 								>
-									Contact
+									Telephone
 								</th>
 								<th
 									scope="col"
 									class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
 								>
-									Département
+									Email
 								</th>
+
 								<th
 									scope="col"
 									class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
 								>
-									Poste
-								</th>
-								<th
-									scope="col"
-									class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
-								>
-									Statut
-								</th>
-								<th
-									scope="col"
-									class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
-								>
-									Date emb.
+									Date enregistrement
 								</th>
 								<th
 									scope="col"
@@ -161,10 +128,12 @@
 											>
 												Marie Dubois
 											</div>
-											<div class="text-xs text-gray-500 dark:text-gray-400">
-												ID: EMP001
-											</div>
 										</div>
+									</div>
+								</td>
+								<td class="px-4 py-3 whitespace-nowrap">
+									<div class="text-xs text-gray-500 dark:text-gray-400">
+										+33 6 12 34 56 78
 									</div>
 								</td>
 								<td class="px-4 py-3 whitespace-nowrap">
@@ -173,39 +142,10 @@
 									>
 										marie.dubois@example.com
 									</div>
-									<div class="text-xs text-gray-500 dark:text-gray-400">
-										+33 6 12 34 56 78
-									</div>
-								</td>
-								<td class="px-4 py-3 whitespace-nowrap">
-									<div class="text-sm text-gray-900 dark:text-white">RH</div>
-									<div class="text-xs text-gray-500 dark:text-gray-400">
-										Ressources Humaines
-									</div>
-								</td>
-								<td class="px-4 py-3 whitespace-nowrap">
-									<div
-										class="text-sm text-gray-900 dark:text-white truncate max-w-[120px]"
-									>
-										Responsable RH
-									</div>
-									<div class="text-xs text-gray-500 dark:text-gray-400">
-										Cadre
-									</div>
-								</td>
-								<td class="px-4 py-3 whitespace-nowrap">
-									<span
-										class="px-2 py-1 inline-flex text-xs font-semibold rounded-full bg-[#00bf63]/10 dark:bg-[#00bf63]/20 text-[#00bf63] dark:text-[#00e673]"
-									>
-										Actif
-									</span>
 								</td>
 								<td class="px-4 py-3 whitespace-nowrap">
 									<div class="text-sm text-gray-900 dark:text-white">
 										15/03/2020
-									</div>
-									<div class="text-xs text-gray-500 dark:text-gray-400">
-										3 ans
 									</div>
 								</td>
 								<td class="px-4 py-3 whitespace-nowrap">
@@ -284,10 +224,12 @@
 											>
 												Jean Martin
 											</div>
-											<div class="text-xs text-gray-500 dark:text-gray-400">
-												ID: EMP002
-											</div>
 										</div>
+									</div>
+								</td>
+								<td class="px-4 py-3 whitespace-nowrap">
+									<div class="text-xs text-gray-500 dark:text-gray-400">
+										+33 6 23 45 67 89
 									</div>
 								</td>
 								<td class="px-4 py-3 whitespace-nowrap">
@@ -296,39 +238,11 @@
 									>
 										jean.martin@example.com
 									</div>
-									<div class="text-xs text-gray-500 dark:text-gray-400">
-										+33 6 23 45 67 89
-									</div>
 								</td>
-								<td class="px-4 py-3 whitespace-nowrap">
-									<div class="text-sm text-gray-900 dark:text-white">IT</div>
-									<div class="text-xs text-gray-500 dark:text-gray-400">
-										Technologie
-									</div>
-								</td>
-								<td class="px-4 py-3 whitespace-nowrap">
-									<div
-										class="text-sm text-gray-900 dark:text-white truncate max-w-[120px]"
-									>
-										Développeur Senior
-									</div>
-									<div class="text-xs text-gray-500 dark:text-gray-400">
-										Technicien
-									</div>
-								</td>
-								<td class="px-4 py-3 whitespace-nowrap">
-									<span
-										class="px-2 py-1 inline-flex text-xs font-semibold rounded-full bg-[#00bf63]/10 dark:bg-[#00bf63]/20 text-[#00bf63] dark:text-[#00e673]"
-									>
-										Actif
-									</span>
-								</td>
+
 								<td class="px-4 py-3 whitespace-nowrap">
 									<div class="text-sm text-gray-900 dark:text-white">
 										20/06/2019
-									</div>
-									<div class="text-xs text-gray-500 dark:text-gray-400">
-										4 ans
 									</div>
 								</td>
 								<td class="px-4 py-3 whitespace-nowrap">

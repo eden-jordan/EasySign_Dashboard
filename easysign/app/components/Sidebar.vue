@@ -14,7 +14,7 @@
 			<div class="flex items-center pl-2.5 mb-8">
 				<div class="flex items-center justify-center w-full">
 					<div
-						class="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center"
+						class="h-8 w-8 rounded-lg bg-[#004aad] flex items-center justify-center"
 					>
 						<span class="text-white font-bold text-lg">E</span>
 					</div>
@@ -139,19 +139,21 @@
 				<div class="flex items-center">
 					<div class="flex-shrink-0">
 						<div
-							class="w-8 h-8 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center"
+							class="w-8 h-8 rounded-full bg-[#004aad] flex items-center justify-center"
 						>
-							<span class="text-white font-bold text-sm">A</span>
+							<span class="text-white font-bold text-sm">{{
+								userInitial
+							}}</span>
 						</div>
 					</div>
 					<div v-if="isSidebarOpen" class="ml-3 overflow-hidden">
 						<p
 							class="text-sm font-medium text-gray-900 dark:text-white truncate"
 						>
-							Admin Principal
+							{{ userFullName }}
 						</p>
 						<p class="text-xs text-gray-500 dark:text-gray-400 truncate">
-							Administrateur
+							{{ userRole }}
 						</p>
 					</div>
 				</div>
@@ -169,6 +171,7 @@
 
 <script setup>
 	import { ref, onMounted, onUnmounted } from "vue";
+	import { useUserStore } from "~~/stores/user";
 
 	defineProps({
 		isSidebarOpen: {
@@ -182,9 +185,30 @@
 	// Pour gérer le responsive
 	const windowWidth = ref(0);
 
-	onMounted(() => {
+	const userStore = useUserStore();
+	const userFullName = ref("");
+	const userRole = ref("");
+	const userEmail = ref("");
+	const userInitial = computed(() => {
+		if (userStore.user && userStore.user.nom) {
+			// Prend la première lettre du nom et la met en majuscule
+			return userStore.user.nom.charAt(0).toUpperCase();
+		}
+	});
+
+	onMounted(async () => {
 		windowWidth.value = window.innerWidth;
 		window.addEventListener("resize", updateWindowWidth);
+
+		await userStore.fetchMe();
+		if (userStore.user) {
+			userFullName.value = `${userStore.user.nom} ${userStore.user.prenom}`;
+			userRole.value =
+				userStore.user.role === "superadmin"
+					? "Admin Principal"
+					: "Administrateur";
+			userEmail.value = userStore.user.email;
+		}
 	});
 
 	onUnmounted(() => {

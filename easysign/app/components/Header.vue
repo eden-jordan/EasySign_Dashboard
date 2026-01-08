@@ -51,7 +51,7 @@
 					<!-- Logo pour mobile -->
 					<div class="lg:hidden flex items-center ml-3">
 						<div
-							class="h-8 w-8 rounded-lg bg-indigo-600 flex items-center justify-center"
+							class="h-8 w-8 rounded-lg bg-[#004aad] flex items-center justify-center"
 						>
 							<span class="text-white font-bold text-lg">E</span>
 						</div>
@@ -104,9 +104,9 @@
 							id="user-menu-button"
 						>
 							<div
-								class="w-10 h-10 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center"
+								class="w-10 h-10 rounded-full bg-[#004aad] flex items-center justify-center"
 							>
-								<span class="text-white font-bold">A</span>
+								<span class="text-white font-bold">{{ userInitial }}</span>
 							</div>
 							<div class="hidden md:block ml-3 text-left">
 								<div class="text-sm font-medium text-gray-900 dark:text-white">
@@ -150,9 +150,11 @@
 								>
 									<div class="flex items-center">
 										<div
-											class="w-12 h-12 rounded-full bg-gradient-to-r from-indigo-500 to-purple-600 flex items-center justify-center"
+											class="w-12 h-12 rounded-full bg-[#004aad] flex items-center justify-center"
 										>
-											<span class="text-white font-bold text-lg">A</span>
+											<span class="text-white font-bold text-lg">{{
+												userInitial
+											}}</span>
 										</div>
 										<div class="ml-3">
 											<div
@@ -315,6 +317,12 @@
 	const userFullName = ref("");
 	const userRole = ref("");
 	const userEmail = ref("");
+	const userInitial = computed(() => {
+		if (userStore.user && userStore.user.nom) {
+			// Prend la première lettre du nom et la met en majuscule
+			return userStore.user.nom.charAt(0).toUpperCase();
+		}
+	});
 
 	// Vérifier le thème au chargement
 	onMounted(async () => {
