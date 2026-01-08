@@ -40,7 +40,6 @@
 				class="bg-white dark:bg-gray-800 rounded-none shadow-md p-4 md:p-5 mx-4 md:mx-6"
 			>
 				<div class="flex flex-col md:flex-row md:items-center gap-4">
-					<!-- Recherche -->
 					<div class="relative flex-1 w-full md:w-auto">
 						<div
 							class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
@@ -58,6 +57,7 @@
 							</svg>
 						</div>
 						<input
+							v-model="searchQuery"
 							type="text"
 							class="w-full bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-base rounded-lg focus:ring-[#004aad] focus:border-[#004aad] block pl-10 p-3"
 							placeholder="Rechercher un employé..."
@@ -66,8 +66,28 @@
 				</div>
 			</div>
 
+			<!-- État de chargement/erreur -->
+			<div v-if="personnelStore.loading" class="p-8 text-center">
+				<div
+					class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-[#004aad]"
+				></div>
+				<p class="mt-2 text-gray-600 dark:text-gray-400">
+					Chargement du personnel...
+				</p>
+			</div>
+
+			<div v-else-if="personnelStore.error" class="p-4 mx-4 md:mx-6">
+				<div
+					class="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4"
+				>
+					<p class="text-red-700 dark:text-red-400">
+						{{ personnelStore.error }}
+					</p>
+				</div>
+			</div>
+
 			<!-- Tableau -->
-			<div class="w-full overflow-x-auto mx-4 md:mx-6">
+			<div v-else class="w-full overflow-x-auto mx-4 md:mx-6">
 				<div class="inline-block min-w-full">
 					<table class="w-full divide-y divide-gray-200 dark:divide-gray-700">
 						<thead class="bg-gray-100 dark:bg-gray-700">
@@ -82,7 +102,7 @@
 									scope="col"
 									class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
 								>
-									Telephone
+									Téléphone
 								</th>
 								<th
 									scope="col"
@@ -90,7 +110,6 @@
 								>
 									Email
 								</th>
-
 								<th
 									scope="col"
 									class="px-4 py-3 text-left text-sm font-semibold text-gray-700 dark:text-gray-300 uppercase tracking-wider"
@@ -108,8 +127,22 @@
 						<tbody
 							class="bg-white dark:bg-gray-800 divide-y divide-gray-200 dark:divide-gray-700"
 						>
-							<!-- Employé 1 -->
-							<tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
+							<!-- Aucun résultat -->
+							<tr v-if="filteredPersonnel.length === 0">
+								<td
+									colspan="5"
+									class="px-4 py-8 text-center text-gray-500 dark:text-gray-400"
+								>
+									Aucun employé trouvé
+								</td>
+							</tr>
+
+							<!-- Liste des employés -->
+							<tr
+								v-for="person in filteredPersonnel"
+								:key="person.id"
+								class="hover:bg-gray-50 dark:hover:bg-gray-700"
+							>
 								<td class="px-4 py-3 whitespace-nowrap">
 									<div class="flex items-center">
 										<div class="flex-shrink-0 h-10 w-10">
@@ -118,34 +151,35 @@
 											>
 												<span
 													class="text-[#004aad] dark:text-[#4a8cff] font-bold text-sm"
-													>MD</span
 												>
+													{{ getInitials(person) }}
+												</span>
 											</div>
 										</div>
 										<div class="ml-3">
 											<div
 												class="text-sm font-medium text-gray-900 dark:text-white truncate max-w-[120px]"
 											>
-												Marie Dubois
+												{{ getFullName(person) }}
 											</div>
 										</div>
 									</div>
 								</td>
 								<td class="px-4 py-3 whitespace-nowrap">
 									<div class="text-xs text-gray-500 dark:text-gray-400">
-										+33 6 12 34 56 78
+										{{ person.tel || "Non renseigné" }}
 									</div>
 								</td>
 								<td class="px-4 py-3 whitespace-nowrap">
 									<div
 										class="text-sm text-gray-900 dark:text-white truncate max-w-[150px]"
 									>
-										marie.dubois@example.com
+										{{ person.email || "Non renseigné" }}
 									</div>
 								</td>
 								<td class="px-4 py-3 whitespace-nowrap">
 									<div class="text-sm text-gray-900 dark:text-white">
-										15/03/2020
+										{{ formatDate(person.created_at) }}
 									</div>
 								</td>
 								<td class="px-4 py-3 whitespace-nowrap">
@@ -153,6 +187,7 @@
 										<button
 											class="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-[#004aad] dark:text-[#4a8cff] hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
 											title="Éditer"
+											@click="editPerson(person)"
 										>
 											<svg
 												class="w-4 h-4"
@@ -167,6 +202,7 @@
 										<button
 											class="p-1.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-[#e61c0e] dark:text-[#ff4d4d] hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
 											title="Supprimer"
+											@click="deletePerson(person)"
 										>
 											<svg
 												class="w-4 h-4"
@@ -183,6 +219,7 @@
 										<button
 											class="p-1.5 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
 											title="Voir détails"
+											@click="viewDetails(person)"
 										>
 											<svg
 												class="w-4 h-4"
@@ -203,105 +240,6 @@
 									</div>
 								</td>
 							</tr>
-
-							<!-- Employé 2 -->
-							<tr class="hover:bg-gray-50 dark:hover:bg-gray-700">
-								<td class="px-4 py-3 whitespace-nowrap">
-									<div class="flex items-center">
-										<div class="flex-shrink-0 h-10 w-10">
-											<div
-												class="h-10 w-10 rounded-full bg-[#00bf63]/10 dark:bg-[#00bf63]/20 flex items-center justify-center"
-											>
-												<span
-													class="text-[#00bf63] dark:text-[#00e673] font-bold text-sm"
-													>JM</span
-												>
-											</div>
-										</div>
-										<div class="ml-3">
-											<div
-												class="text-sm font-medium text-gray-900 dark:text-white truncate max-w-[120px]"
-											>
-												Jean Martin
-											</div>
-										</div>
-									</div>
-								</td>
-								<td class="px-4 py-3 whitespace-nowrap">
-									<div class="text-xs text-gray-500 dark:text-gray-400">
-										+33 6 23 45 67 89
-									</div>
-								</td>
-								<td class="px-4 py-3 whitespace-nowrap">
-									<div
-										class="text-sm text-gray-900 dark:text-white truncate max-w-[150px]"
-									>
-										jean.martin@example.com
-									</div>
-								</td>
-
-								<td class="px-4 py-3 whitespace-nowrap">
-									<div class="text-sm text-gray-900 dark:text-white">
-										20/06/2019
-									</div>
-								</td>
-								<td class="px-4 py-3 whitespace-nowrap">
-									<div class="flex space-x-2">
-										<button
-											class="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-[#004aad] dark:text-[#4a8cff] hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
-											title="Éditer"
-										>
-											<svg
-												class="w-4 h-4"
-												fill="currentColor"
-												viewBox="0 0 20 20"
-											>
-												<path
-													d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
-												/>
-											</svg>
-										</button>
-										<button
-											class="p-1.5 rounded-lg bg-red-50 dark:bg-red-900/20 text-[#e61c0e] dark:text-[#ff4d4d] hover:bg-red-100 dark:hover:bg-red-900/30 transition-colors"
-											title="Supprimer"
-										>
-											<svg
-												class="w-4 h-4"
-												fill="currentColor"
-												viewBox="0 0 20 20"
-											>
-												<path
-													fill-rule="evenodd"
-													d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-													clip-rule="evenodd"
-												/>
-											</svg>
-										</button>
-										<button
-											class="p-1.5 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-											title="Voir détails"
-										>
-											<svg
-												class="w-4 h-4"
-												fill="currentColor"
-												viewBox="0 0 20 20"
-											>
-												<path
-													fill-rule="evenodd"
-													d="M10 12a2 2 0 100-4 2 2 0 000 4z"
-												/>
-												<path
-													fill-rule="evenodd"
-													d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
-													clip-rule="evenodd"
-												/>
-											</svg>
-										</button>
-									</div>
-								</td>
-							</tr>
-
-							<!-- Ajoute les autres employés ici -->
 						</tbody>
 					</table>
 				</div>
@@ -309,46 +247,56 @@
 
 			<!-- Pagination -->
 			<div
+				v-if="!personnelStore.loading && personnelStore.personnel.length > 0"
 				class="flex flex-col md:flex-row items-center justify-between space-y-4 md:space-y-0 p-4 md:p-6"
 			>
 				<div class="text-sm text-gray-600 dark:text-gray-400">
 					Affichage de <span class="font-semibold">1</span> à
-					<span class="font-semibold">5</span> sur
-					<span class="font-semibold">10</span> employés
+					<span class="font-semibold">{{
+						personnelStore.personnel.length
+					}}</span>
+					sur
+					<span class="font-semibold">{{
+						personnelStore.personnel.length
+					}}</span>
+					employés
 				</div>
 				<div class="flex items-center space-x-3">
 					<select
+						v-model="itemsPerPage"
 						class="bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 text-sm rounded-lg p-2 focus:ring-[#004aad] focus:border-[#004aad]"
 					>
-						<option>5 par page</option>
-						<option>10 par page</option>
-						<option>25 par page</option>
-						<option>50 par page</option>
+						<option value="5">5 par page</option>
+						<option value="10">10 par page</option>
+						<option value="25">25 par page</option>
+						<option value="50">50 par page</option>
 					</select>
 					<nav class="flex items-center space-x-2">
 						<button
 							class="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-sm font-medium transition-colors"
-							disabled
+							:disabled="currentPage === 1"
+							@click="currentPage--"
 						>
 							Précédent
 						</button>
 						<button
-							class="px-3 py-2 rounded-lg bg-[#004aad] text-white text-sm font-medium hover:bg-[#003b8a] transition-colors"
+							v-for="page in totalPages"
+							:key="page"
+							class="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-sm font-medium transition-colors"
+							:class="{
+								'bg-[#004aad] text-white hover:bg-[#003b8a]':
+									currentPage === page,
+								'text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700':
+									currentPage !== page,
+							}"
+							@click="currentPage = page"
 						>
-							1
+							{{ page }}
 						</button>
 						<button
 							class="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm font-medium transition-colors"
-						>
-							2
-						</button>
-						<button
-							class="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm font-medium transition-colors"
-						>
-							3
-						</button>
-						<button
-							class="px-3 py-2 rounded-lg border border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 text-sm font-medium transition-colors"
+							:disabled="currentPage === totalPages"
+							@click="currentPage++"
 						>
 							Suivant
 						</button>
@@ -360,6 +308,78 @@
 </template>
 
 <script setup>
+	import { ref, computed, onMounted } from "vue";
+	import { usePersonnelStore } from "~~/stores/personnel";
+
+	const personnelStore = usePersonnelStore();
+	const searchQuery = ref("");
+	const currentPage = ref(1);
+	const itemsPerPage = ref(10);
+
+	// Fonctions utilitaires
+	const getFullName = (person) => {
+		return `${person.prenom || ""} ${person.nom || ""}`.trim();
+	};
+
+	const getInitials = (person) => {
+		const nom = person.nom?.charAt(0).toUpperCase() || "";
+		const prenom = person.prenom?.charAt(0).toUpperCase() || "";
+		return `${prenom}${nom}`;
+	};
+
+	const formatDate = (dateString) => {
+		if (!dateString) return "Non renseignée";
+		const date = new Date(dateString);
+		return date.toLocaleDateString("fr-FR");
+	};
+
+	// Filtrage et pagination
+	const filteredPersonnel = computed(() => {
+		let personnel = personnelStore.personnel || [];
+
+		// Filtre de recherche
+		if (searchQuery.value) {
+			const query = searchQuery.value.toLowerCase();
+			personnel = personnel.filter(
+				(person) =>
+					getFullName(person).toLowerCase().includes(query) ||
+					person.email?.toLowerCase().includes(query) ||
+					person.tel?.includes(query),
+			);
+		}
+
+		return personnel;
+	});
+
+	const totalPages = computed(() => {
+		return Math.ceil(filteredPersonnel.value.length / itemsPerPage.value);
+	});
+
+	// Méthodes d'actions
+	const editPerson = (person) => {
+		console.log("Éditer:", person);
+		// Implémentez la logique d'édition
+	};
+
+	const deletePerson = (person) => {
+		if (
+			confirm(`Êtes-vous sûr de vouloir supprimer ${getFullName(person)} ?`)
+		) {
+			console.log("Supprimer:", person);
+			// Implémentez la logique de suppression
+		}
+	};
+
+	const viewDetails = (person) => {
+		console.log("Voir détails:", person);
+		// Implémentez la navigation vers les détails
+	};
+
+	// Chargement initial
+	onMounted(async () => {
+		await personnelStore.getPersonnel();
+	});
+
 	definePageMeta({
 		middleware: "auth",
 	});
