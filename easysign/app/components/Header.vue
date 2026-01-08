@@ -110,10 +110,10 @@
 							</div>
 							<div class="hidden md:block ml-3 text-left">
 								<div class="text-sm font-medium text-gray-900 dark:text-white">
-									Admin Principal
+									{{ userFullName }}
 								</div>
 								<div class="text-xs text-gray-500 dark:text-gray-400">
-									Administrateur
+									{{ userRole }}
 								</div>
 							</div>
 							<svg
@@ -158,15 +158,15 @@
 											<div
 												class="text-sm font-semibold text-gray-900 dark:text-white"
 											>
-												Admin Principal
+												{{ userFullName }}
 											</div>
 											<div class="text-xs text-gray-500 dark:text-gray-400">
-												Administrateur
+												{{ userRole }}
 											</div>
 											<div
 												class="text-xs text-gray-500 dark:text-gray-400 mt-1"
 											>
-												admin@example.com
+												{{ userEmail }}
 											</div>
 										</div>
 									</div>
@@ -222,7 +222,7 @@
 										<a
 											href="#"
 											class="flex items-center px-4 py-2 text-sm text-red-600 dark:text-red-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors duration-150"
-											@click="closeUserMenu"
+											@click.prevent="handleLogout"
 										>
 											<svg
 												class="w-4 h-4 mr-3"
@@ -268,12 +268,21 @@
 <script setup>
 	import { ref, onMounted, onUnmounted, computed } from "vue";
 	import { useRoute } from "vue-router";
+	import { useAuthStore } from "~~/stores/auth";
+	import { useUserStore } from "~~/stores/user";
 
 	const route = useRoute();
 	const isUserMenuOpen = ref(false);
 	const darkMode = ref(false);
 	const userMenuButton = ref(null);
 	const userMenu = ref(null);
+	const auth = useAuthStore();
+	const userStore = useUserStore();
+
+	const handleLogout = () => {
+		closeUserMenu();
+		auth.logout();
+	};
 
 	// Props
 	const props = defineProps({
@@ -281,31 +290,6 @@
 			type: Boolean,
 			default: true,
 		},
-	});
-
-	// Calculer le titre de la page en fonction de la route
-	const pageTitle = computed(() => {
-		const routeNames = {
-			"/": "Tableau de bord",
-			"/dashboard": "Tableau de bord",
-			"/personnel": "Gestion du personnel",
-			"/presences": "Suivi des présences",
-			"/rapports": "Rapports et statistiques",
-			"/organisations": "Organisations",
-		};
-		return routeNames[route.path] || "Tableau de bord";
-	});
-
-	const pageSubtitle = computed(() => {
-		const subtitles = {
-			"/": "Vue d'ensemble de votre activité",
-			"/dashboard": "Vue d'ensemble de votre activité",
-			"/personnel": "Gérez votre équipe",
-			"/presences": "Suivez les présences en temps réel",
-			"/rapports": "Analysez vos données",
-			"/organisations": "Gérez vos structures",
-		};
-		return subtitles[route.path] || "Tableau de bord";
 	});
 
 	const toggleUserMenu = () => {
@@ -328,8 +312,12 @@
 		}
 	};
 
+	const userFullName = ref("");
+	const userRole = ref("");
+	const userEmail = ref("");
+
 	// Vérifier le thème au chargement
-	onMounted(() => {
+	onMounted(async () => {
 		const savedTheme = localStorage.getItem("theme");
 		const prefersDark = window.matchMedia(
 			"(prefers-color-scheme: dark)",
@@ -342,6 +330,16 @@
 
 		// Fermer le menu si on clique en dehors
 		document.addEventListener("click", handleClickOutside);
+
+		await userStore.fetchMe();
+		if (userStore.user) {
+			userFullName.value = `${userStore.user.nom} ${userStore.user.prenom}`;
+			userRole.value =
+				userStore.user.role === "superadmin"
+					? "Admin Principal"
+					: "Administrateur";
+			userEmail.value = userStore.user.email;
+		}
 	});
 
 	onUnmounted(() => {

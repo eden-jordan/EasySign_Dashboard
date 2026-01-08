@@ -54,8 +54,10 @@
 <script setup>
 	import { ref } from "vue";
 	import { useAuthStore } from "../../stores/auth";
+	import { useUserStore } from "~~/stores/user";
 
 	const auth = useAuthStore();
+	const userStore = useUserStore();
 
 	const email = ref("");
 	const password = ref("");
