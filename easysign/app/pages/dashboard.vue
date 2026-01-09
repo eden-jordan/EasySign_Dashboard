@@ -161,144 +161,21 @@
 					</select>
 				</div>
 
-				<div class="space-y-4">
-					<!-- Jour : Lundi -->
-					<div
-						class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
-					>
-						<div class="flex items-center">
-							<div
-								class="w-10 h-10 rounded-lg bg-[#004aad]/10 dark:bg-[#004aad]/20 flex items-center justify-center mr-3"
-							>
-								<span class="text-[#004aad] dark:text-[#4a8cff] font-medium"
-									>Lun</span
-								>
-							</div>
-							<div>
-								<p class="font-medium text-gray-900 dark:text-white">Lundi</p>
-								<p class="text-sm text-gray-500 dark:text-gray-400">
-									220 présents
-								</p>
-							</div>
-						</div>
-						<div class="text-right">
-							<p class="text-lg font-bold text-[#e61c0e] dark:text-[#ff4d4d]">
-								28
-							</p>
-							<p class="text-sm text-gray-500 dark:text-gray-400">absents</p>
-						</div>
+				<div
+					v-for="day in dashboardStore.week"
+					:key="day.day"
+					class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
+				>
+					<div>
+						<p class="font-medium text-gray-900 dark:text-white">
+							{{ day.day }}
+						</p>
+						<p class="text-sm text-gray-500">{{ day.present }} présents</p>
 					</div>
 
-					<!-- Jour : Mardi -->
-					<div
-						class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
-					>
-						<div class="flex items-center">
-							<div
-								class="w-10 h-10 rounded-lg bg-[#00bf63]/10 dark:bg-[#00bf63]/20 flex items-center justify-center mr-3"
-							>
-								<span class="text-[#00bf63] dark:text-[#00e673] font-medium"
-									>Mar</span
-								>
-							</div>
-							<div>
-								<p class="font-medium text-gray-900 dark:text-white">Mardi</p>
-								<p class="text-sm text-gray-500 dark:text-gray-400">
-									215 présents
-								</p>
-							</div>
-						</div>
-						<div class="text-right">
-							<p class="text-lg font-bold text-[#e61c0e] dark:text-[#ff4d4d]">
-								33
-							</p>
-							<p class="text-sm text-gray-500 dark:text-gray-400">absents</p>
-						</div>
-					</div>
-
-					<!-- Jour : Mercredi -->
-					<div
-						class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
-					>
-						<div class="flex items-center">
-							<div
-								class="w-10 h-10 rounded-lg bg-[#2E9AC8]/10 dark:bg-[#2E9AC8]/20 flex items-center justify-center mr-3"
-							>
-								<span class="text-[#2E9AC8] dark:text-[#4ab3e6] font-medium"
-									>Mer</span
-								>
-							</div>
-							<div>
-								<p class="font-medium text-gray-900 dark:text-white">
-									Mercredi
-								</p>
-								<p class="text-sm text-gray-500 dark:text-gray-400">
-									230 présents
-								</p>
-							</div>
-						</div>
-						<div class="text-right">
-							<p class="text-lg font-bold text-[#e61c0e] dark:text-[#ff4d4d]">
-								18
-							</p>
-							<p class="text-sm text-gray-500 dark:text-gray-400">absents</p>
-						</div>
-					</div>
-
-					<!-- Jour : Jeudi -->
-					<div
-						class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
-					>
-						<div class="flex items-center">
-							<div
-								class="w-10 h-10 rounded-lg bg-[#004aad]/20 dark:bg-[#004aad]/30 flex items-center justify-center mr-3"
-							>
-								<span class="text-[#004aad] dark:text-[#5a9cff] font-medium"
-									>Jeu</span
-								>
-							</div>
-							<div>
-								<p class="font-medium text-gray-900 dark:text-white">Jeudi</p>
-								<p class="text-sm text-gray-500 dark:text-gray-400">
-									225 présents
-								</p>
-							</div>
-						</div>
-						<div class="text-right">
-							<p class="text-lg font-bold text-[#e61c0e] dark:text-[#ff4d4d]">
-								23
-							</p>
-							<p class="text-sm text-gray-500 dark:text-gray-400">absents</p>
-						</div>
-					</div>
-
-					<!-- Jour : Vendredi -->
-					<div
-						class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
-					>
-						<div class="flex items-center">
-							<div
-								class="w-10 h-10 rounded-lg bg-[#2E9AC8]/20 dark:bg-[#2E9AC8]/30 flex items-center justify-center mr-3"
-							>
-								<span class="text-[#2E9AC8] dark:text-[#5ab3e6] font-medium"
-									>Ven</span
-								>
-							</div>
-							<div>
-								<p class="font-medium text-gray-900 dark:text-white">
-									Vendredi
-								</p>
-								<p class="text-sm text-gray-500 dark:text-gray-400">
-									186 présents
-								</p>
-							</div>
-						</div>
-						<div class="text-right">
-							<p class="text-lg font-bold text-[#e61c0e] dark:text-[#ff4d4d]">
-								62
-							</p>
-							<p class="text-sm text-gray-500 dark:text-gray-400">absents</p>
-						</div>
+					<div class="text-right">
+						<p class="text-lg font-bold text-red-500">{{ day.absent }}</p>
+						<p class="text-sm text-gray-400">absents</p>
 					</div>
 				</div>
 
@@ -332,146 +209,27 @@
 					</button>
 				</div>
 
-				<div class="space-y-4">
-					<!-- Activité 1 -->
-					<div class="flex items-start">
-						<div class="flex-shrink-0">
-							<div
-								class="w-10 h-10 rounded-full bg-[#00bf63]/10 dark:bg-[#00bf63]/20 flex items-center justify-center"
-							>
-								<svg
-									class="w-5 h-5 text-[#00bf63] dark:text-[#00e673]"
-									fill="currentColor"
-									viewBox="0 0 20 20"
-								>
-									<path
-										fill-rule="evenodd"
-										d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-										clip-rule="evenodd"
-									/>
-								</svg>
-							</div>
-						</div>
-						<div class="ml-3">
-							<p class="text-sm font-medium text-gray-900 dark:text-white">
-								Marie Dubois a marqué sa présence
-							</p>
-							<p class="text-xs text-gray-500 dark:text-gray-400">
-								Il y a 5 min
-							</p>
-						</div>
-					</div>
-
-					<!-- Activité 2 -->
-					<div class="flex items-start">
-						<div class="flex-shrink-0">
-							<div
-								class="w-10 h-10 rounded-full bg-[#004aad]/10 dark:bg-[#004aad]/20 flex items-center justify-center"
-							>
-								<svg
-									class="w-5 h-5 text-[#004aad] dark:text-[#4a8cff]"
-									fill="currentColor"
-									viewBox="0 0 20 20"
-								>
-									<path
-										fill-rule="evenodd"
-										d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
-										clip-rule="evenodd"
-									/>
-								</svg>
-							</div>
-						</div>
-						<div class="ml-3">
-							<p class="text-sm font-medium text-gray-900 dark:text-white">
-								Jean Martin a été ajouté au personnel
-							</p>
-							<p class="text-xs text-gray-500 dark:text-gray-400">
-								Il y a 15 min
-							</p>
-						</div>
-					</div>
-
-					<!-- Activité 3 -->
-					<div class="flex items-start">
-						<div class="flex-shrink-0">
-							<div
-								class="w-10 h-10 rounded-full bg-[#2E9AC8]/10 dark:bg-[#2E9AC8]/20 flex items-center justify-center"
-							>
-								<svg
-									class="w-5 h-5 text-[#2E9AC8] dark:text-[#4ab3e6]"
-									fill="currentColor"
-									viewBox="0 0 20 20"
-								>
-									<path
-										fill-rule="evenodd"
-										d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V8z"
-										clip-rule="evenodd"
-									/>
-								</svg>
-							</div>
-						</div>
-						<div class="ml-3">
-							<p class="text-sm font-medium text-gray-900 dark:text-white">
-								Sophie Laurent a généré un rapport
-							</p>
-							<p class="text-xs text-gray-500 dark:text-gray-400">
-								Il y a 30 min
-							</p>
-						</div>
-					</div>
-
-					<!-- Activité 4 -->
-					<div class="flex items-start">
-						<div class="flex-shrink-0">
-							<div
-								class="w-10 h-10 rounded-full bg-[#e61c0e]/10 dark:bg-[#e61c0e]/20 flex items-center justify-center"
-							>
-								<svg
-									class="w-5 h-5 text-[#e61c0e] dark:text-[#ff4d4d]"
-									fill="currentColor"
-									viewBox="0 0 20 20"
-								>
-									<path
-										fill-rule="evenodd"
-										d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 000 2h6a1 1 0 100-2H7z"
-										clip-rule="evenodd"
-									/>
-								</svg>
-							</div>
-						</div>
-						<div class="ml-3">
-							<p class="text-sm font-medium text-gray-900 dark:text-white">
-								Pierre Durand a marqué une absence
-							</p>
-							<p class="text-xs text-gray-500 dark:text-gray-400">Il y a 1h</p>
-						</div>
-					</div>
-
-					<!-- Activité 5 -->
-					<div class="flex items-start">
-						<div class="flex-shrink-0">
-							<div
-								class="w-10 h-10 rounded-full bg-[#2E9AC8]/15 dark:bg-[#2E9AC8]/25 flex items-center justify-center"
-							>
-								<svg
-									class="w-5 h-5 text-[#2E9AC8] dark:text-[#4ab3e6]"
-									fill="currentColor"
-									viewBox="0 0 20 20"
-								>
-									<path
-										fill-rule="evenodd"
-										d="M11.49 3.17c-.38-1.56-2.6-1.56-2.98 0a1.532 1.532 0 01-2.286.948c-1.372-.836-2.942.734-2.106 2.106.54.886.061 2.042-.947 2.287-1.561.379-1.561 2.6 0 2.978a1.532 1.532 0 01.947 2.287c-.836 1.372.734 2.942 2.106 2.106a1.532 1.532 0 012.287.947c.379 1.561 2.6 1.561 2.978 0a1.533 1.533 0 012.287-.947c1.372.836 2.942-.734 2.106-2.106a1.533 1.533 0 01.947-2.287c1.561-.379 1.561-2.6 0-2.978a1.532 1.532 0 01-.947-2.287c.836-1.372-.734-2.942-2.106-2.106a1.532 1.532 0 01-2.287-.947zM10 13a3 3 0 100-6 3 3 0 000 6z"
-										clip-rule="evenodd"
-									/>
-								</svg>
-							</div>
-						</div>
-						<div class="ml-3">
-							<p class="text-sm font-medium text-gray-900 dark:text-white">
-								Claire Bernard a mis à jour son profil
-							</p>
-							<p class="text-xs text-gray-500 dark:text-gray-400">Il y a 2h</p>
-						</div>
+				<div
+					v-for="(a, i) in dashboardStore.activities"
+					:key="i"
+					class="flex items-start"
+				>
+					<div class="ml-3">
+						<p class="text-sm font-medium">
+							{{ a.personnel }} —
+							{{
+								a.action === "arrivee"
+									? "Arrivée"
+									: a.action === "pause_debut"
+									? "Début pause"
+									: a.action === "pause_fin"
+									? "Fin pause"
+									: a.action === "depart"
+									? "Départ"
+									: a.action
+							}}
+						</p>
+						<p class="text-xs text-gray-500">{{ a.date }} à {{ a.time }}</p>
 					</div>
 				</div>
 			</div>
@@ -595,7 +353,9 @@
 	import { ref } from "vue";
 	import { usePersonnelStore } from "~~/stores/personnel";
 	import { usePresenceStore } from "~~/stores/presence";
+	import { useDashboardStore } from "~~/stores/dashboard";
 
+	const dashboardStore = useDashboardStore();
 	const personnelStore = usePersonnelStore();
 	const presenceStore = usePresenceStore();
 	const totalPersonnel = computed(() => personnelStore.count);
@@ -621,6 +381,7 @@
 	onMounted(async () => {
 		await personnelStore.getPersonnel();
 		await presenceStore.getTodayPresences();
+		await dashboardStore.loadStats();
 	});
 
 	definePageMeta({
