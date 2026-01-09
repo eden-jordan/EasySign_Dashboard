@@ -168,9 +168,10 @@
 				>
 					<div>
 						<p class="font-medium text-gray-900 dark:text-white">
-							{{ day.day }}
+							{{ getDayInFrench(day.day) }}
 						</p>
-						<p class="text-sm text-gray-500">{{ day.present }} présents</p>
+						<p class="text-lg font-bold text-green-600">{{ day.present }}</p>
+						<p class="text-sm text-gray-400">présents</p>
 					</div>
 
 					<div class="text-right">
@@ -384,6 +385,19 @@
 			? dashboardStore.currentWeek
 			: dashboardStore.lastWeek;
 	});
+
+	const getDayInFrench = (day) => {
+		const days = {
+			Monday: "Lundi",
+			Tuesday: "Mardi",
+			Wednesday: "Mercredi",
+			Thursday: "Jeudi",
+			Friday: "Vendredi",
+			Saturday: "Samedi",
+			Sunday: "Dimanche",
+		};
+		return days[day] || day;
+	};
 
 	// Chargement initial
 	onMounted(async () => {
