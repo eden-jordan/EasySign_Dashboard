@@ -153,16 +153,16 @@
 						Présences de la semaine
 					</h3>
 					<select
+						v-model="selectedWeek"
 						class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-[#004aad] focus:border-[#004aad] block p-2"
 					>
-						<option selected>Cette semaine</option>
+						<option>Cette semaine</option>
 						<option>Semaine dernière</option>
-						<option>Ce mois</option>
 					</select>
 				</div>
 
 				<div
-					v-for="day in dashboardStore.week"
+					v-for="day in displayedWeek"
 					:key="day.day"
 					class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-lg"
 				>
@@ -376,6 +376,14 @@
 			window.location.reload();
 		}, 500);
 	};
+
+	const selectedWeek = ref("Cette semaine");
+
+	const displayedWeek = computed(() => {
+		return selectedWeek.value === "Cette semaine"
+			? dashboardStore.currentWeek
+			: dashboardStore.lastWeek;
+	});
 
 	// Chargement initial
 	onMounted(async () => {

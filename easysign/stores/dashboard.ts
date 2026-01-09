@@ -1,6 +1,7 @@
 export const useDashboardStore = defineStore("dashboard", {
 	state: () => ({
-		week: [],
+		currentWeek: [], // cette semaine
+		lastWeek: [], // semaine dernière
 		activities: [],
 		loading: false,
 	}),
@@ -14,8 +15,9 @@ export const useDashboardStore = defineStore("dashboard", {
 
 			console.log("STATS API =", res);
 
-			this.week = res.week;
-			this.activities = res.activities;
+			this.currentWeek = res.currentWeek || [];
+			this.lastWeek = res.lastWeek || [];
+			this.activities = res.activities || [];
 
 			this.loading = false;
 		},
