@@ -11,6 +11,8 @@ export const usePersonnelStore = defineStore("personnel", {
 	getters: {
 		count: (state) => state.personnel.length,
 
+		getTotalPersonnel: (state) => state.personnel.length,
+
 		byId: (state) => {
 			return (id: number | string) => state.personnel.find((p) => p.id == id);
 		},

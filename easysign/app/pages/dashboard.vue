@@ -47,7 +47,7 @@
 							Total Personnel
 						</p>
 						<p class="text-3xl font-bold text-gray-900 dark:text-white mt-2">
-							248
+							{{ personnelStore.getTotalPersonnel }}
 						</p>
 					</div>
 					<div class="p-3 rounded-lg bg-[#004aad]/10 dark:bg-[#004aad]/20">
@@ -64,19 +64,6 @@
 						</svg>
 					</div>
 				</div>
-				<div class="mt-4 flex items-center text-sm">
-					<span class="text-[#00bf63] dark:text-[#00d673] flex items-center">
-						<svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-							<path
-								fill-rule="evenodd"
-								d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"
-								clip-rule="evenodd"
-							/>
-						</svg>
-						+12%
-					</span>
-					<span class="text-gray-500 dark:text-gray-400 ml-2">ce mois</span>
-				</div>
 			</div>
 
 			<!-- Carte Présences Aujourd'hui -->
@@ -89,7 +76,7 @@
 							Présences Aujourd'hui
 						</p>
 						<p class="text-3xl font-bold text-gray-900 dark:text-white mt-2">
-							186
+							{{ totalPresents }}
 						</p>
 					</div>
 					<div class="p-3 rounded-lg bg-[#00bf63]/10 dark:bg-[#00bf63]/20">
@@ -119,9 +106,6 @@
 					<div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
 						<div class="bg-[#00bf63] h-2 rounded-full" style="width: 75%"></div>
 					</div>
-					<div class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-						ce mois
-					</div>
 				</div>
 			</div>
 
@@ -133,7 +117,7 @@
 					<div>
 						<p class="text-sm text-gray-500 dark:text-gray-400">Absences</p>
 						<p class="text-3xl font-bold text-gray-900 dark:text-white mt-2">
-							62
+							{{ totalAbsents }}
 						</p>
 					</div>
 					<div class="p-3 rounded-lg bg-[#e61c0e]/10 dark:bg-[#e61c0e]/20">
@@ -149,19 +133,6 @@
 							/>
 						</svg>
 					</div>
-				</div>
-				<div class="mt-4 flex items-center text-sm">
-					<span class="text-[#e61c0e] dark:text-[#ff4d4d] flex items-center">
-						<svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-							<path
-								fill-rule="evenodd"
-								d="M12 13a1 1 0 100 2h5a1 1 0 001-1V9a1 1 0 10-2 0v2.586l-4.293-4.293a1 1 0 00-1.414 0L8 9.586l-4.293-4.293a1 1 0 00-1.414 1.414l5 5a1 1 0 001.414 0L11 9.414 14.586 13H12z"
-								clip-rule="evenodd"
-							/>
-						</svg>
-						-8%
-					</span>
-					<span class="text-gray-500 dark:text-gray-400 ml-2">ce mois</span>
 				</div>
 			</div>
 		</div>
@@ -617,6 +588,16 @@
 
 <script setup>
 	import { ref } from "vue";
+	import { usePersonnelStore } from "~~/stores/personnel";
+	import { usePresenceStore } from "~~/stores/presence";
+
+	const personnelStore = usePersonnelStore();
+	const presenceStore = usePresenceStore();
+	const totalPersonnel = computed(() => personnelStore.count);
+	const totalPresents = computed(() => presenceStore.totalPresents);
+	const totalAbsents = computed(() => {
+		return totalPersonnel.value - totalPresents.value;
+	});
 
 	const refreshing = ref(false);
 
@@ -626,6 +607,12 @@
 			window.location.reload();
 		}, 500);
 	};
+
+	// Chargement initial
+	onMounted(async () => {
+		await personnelStore.getPersonnel();
+		await presenceStore.getTodayPresences();
+	});
 
 	definePageMeta({
 		middleware: "auth",
