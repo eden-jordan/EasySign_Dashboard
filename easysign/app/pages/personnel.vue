@@ -18,6 +18,7 @@
 				<div class="mt-4 md:mt-0">
 					<button
 						class="px-4 py-2.5 bg-[#004aad] hover:bg-[#003b8a] text-white rounded-lg font-medium flex items-center transition duration-200 shadow-md hover:shadow-lg"
+						@click="openCreateModal"
 					>
 						<svg
 							class="w-5 h-5 md:w-6 md:h-6 mr-2"
@@ -187,7 +188,7 @@
 										<button
 											class="p-1.5 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-[#004aad] dark:text-[#4a8cff] hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-colors"
 											title="Éditer"
-											@click="editPerson(person)"
+											@click="openEditModal(person)"
 										>
 											<svg
 												class="w-4 h-4"
@@ -219,7 +220,7 @@
 										<button
 											class="p-1.5 rounded-lg bg-gray-50 dark:bg-gray-700 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
 											title="Voir détails"
-											@click="viewDetails(person)"
+											@click="openDetailModal(person)"
 										>
 											<svg
 												class="w-4 h-4"
@@ -305,6 +306,76 @@
 			</div>
 		</div>
 	</div>
+
+	<div
+		v-if="showCreateModal"
+		class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+	>
+		<div class="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md">
+			<h2 class="text-xl font-bold mb-4">Ajouter un employé</h2>
+
+			<input v-model="form.prenom" placeholder="Prénom" class="input" />
+			<input v-model="form.nom" placeholder="Nom" class="input" />
+			<input v-model="form.email" placeholder="Email" class="input" />
+			<input v-model="form.tel" placeholder="Téléphone" class="input" />
+
+			<div class="flex justify-end gap-2 mt-4">
+				<button @click="showCreateModal = false" class="btn-gray">
+					Annuler
+				</button>
+				<button @click="submitCreate" class="btn-primary">
+					{{ actionLoading ? "Création..." : "Créer" }}
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div
+		v-if="showEditModal"
+		class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+	>
+		<div class="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md">
+			<h2 class="text-xl font-bold mb-4">Modifier employé</h2>
+
+			<input v-model="form.prenom" class="input" />
+			<input v-model="form.nom" class="input" />
+			<input v-model="form.email" class="input" />
+			<input v-model="form.tel" class="input" />
+
+			<div class="flex justify-end gap-2 mt-4">
+				<button @click="showEditModal = false" class="btn-gray">Annuler</button>
+				<button @click="submitUpdate" class="btn-primary">
+					{{ actionLoading ? "Sauvegarde..." : "Enregistrer" }}
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<div
+		v-if="showDetailModal"
+		class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+	>
+		<div class="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md">
+			<h2 class="text-xl font-bold mb-4">Détails employé</h2>
+
+			<div v-if="selectedPerson">
+				<p><b>Nom :</b> {{ getFullName(selectedPerson) }}</p>
+				<p><b>Email :</b> {{ selectedPerson.email || "N/A" }}</p>
+				<p><b>Téléphone :</b> {{ selectedPerson.tel || "N/A" }}</p>
+				<p><b>Code :</b> {{ selectedPerson.qr_code }}</p>
+			</div>
+
+			<div class="flex justify-between gap-2 mt-6">
+				<button @click="generateBadge(selectedPerson)" class="btn-primary">
+					Générer badge
+				</button>
+
+				<button @click="showDetailModal = false" class="btn-gray">
+					Fermer
+				</button>
+			</div>
+		</div>
+	</div>
 </template>
 
 <script setup>
@@ -315,6 +386,24 @@
 	const searchQuery = ref("");
 	const currentPage = ref(1);
 	const itemsPerPage = ref(10);
+	// Modals
+	const showCreateModal = ref(false);
+	const showEditModal = ref(false);
+	const showDetailModal = ref(false);
+
+	// Personnel sélectionné
+	const selectedPerson = ref(null);
+
+	// Formulaire
+	const form = ref({
+		nom: "",
+		prenom: "",
+		email: "",
+		tel: "",
+	});
+
+	// Loading action
+	const actionLoading = ref(false);
 
 	// Fonctions utilitaires
 	const getFullName = (person) => {
@@ -361,18 +450,77 @@
 		// Implémentez la logique d'édition
 	};
 
-	const deletePerson = (person) => {
-		if (
-			confirm(`Êtes-vous sûr de vouloir supprimer ${getFullName(person)} ?`)
-		) {
-			console.log("Supprimer:", person);
-			// Implémentez la logique de suppression
-		}
-	};
-
 	const viewDetails = (person) => {
 		console.log("Voir détails:", person);
 		// Implémentez la navigation vers les détails
+	};
+
+	// =========================
+	// MODALS
+	// =========================
+	const openCreateModal = () => {
+		form.value = { nom: "", prenom: "", email: "", tel: "" };
+		showCreateModal.value = true;
+	};
+
+	const openEditModal = (person) => {
+		selectedPerson.value = person;
+		form.value = {
+			nom: person.nom,
+			prenom: person.prenom,
+			email: person.email,
+			tel: person.tel,
+		};
+		showEditModal.value = true;
+	};
+
+	const openDetailModal = (person) => {
+		selectedPerson.value = person;
+		showDetailModal.value = true;
+	};
+
+	// =========================
+	// ACTIONS
+	// =========================
+	const submitCreate = async () => {
+		try {
+			actionLoading.value = true;
+			await personnelStore.createPersonnel(form.value);
+			showCreateModal.value = false;
+		} catch (e) {
+			alert("Erreur création");
+		} finally {
+			actionLoading.value = false;
+		}
+	};
+
+	const submitUpdate = async () => {
+		try {
+			actionLoading.value = true;
+			await personnelStore.updatePersonnel(selectedPerson.value.id, form.value);
+			showEditModal.value = false;
+		} catch (e) {
+			alert("Erreur modification");
+		} finally {
+			actionLoading.value = false;
+		}
+	};
+
+	const deletePerson = async (person) => {
+		if (!confirm(`Supprimer ${getFullName(person)} ?`)) return;
+
+		try {
+			await personnelStore.deletePersonnel(person.id);
+		} catch (e) {
+			alert("Erreur suppression");
+		}
+	};
+
+	const generateBadge = (person) => {
+		window.open(
+			`http://192.168.10.112:8000/api/personnel/${person.id}/qrcode`,
+			"_blank",
+		);
 	};
 
 	// Chargement initial
