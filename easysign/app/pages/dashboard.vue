@@ -210,27 +210,63 @@
 					</button>
 				</div>
 
-				<div
-					v-for="(a, i) in dashboardStore.activities"
-					:key="i"
-					class="flex items-start"
-				>
-					<div class="ml-3">
-						<p class="text-sm font-medium">
-							{{ a.personnel }} —
-							{{
-								a.action === "arrivee"
-									? "Arrivée"
-									: a.action === "pause_debut"
-									? "Début pause"
-									: a.action === "pause_fin"
-									? "Fin pause"
-									: a.action === "depart"
-									? "Départ"
-									: a.action
-							}}
-						</p>
-						<p class="text-xs text-gray-500">{{ a.date }} à {{ a.time }}</p>
+				<!-- Filtre actions -->
+				<div class="flex gap-2 mb-4 flex-wrap">
+					<button
+						v-for="filter in filters"
+						:key="filter"
+						@click="selectedFilter = filter"
+						:class="[
+							'px-3 py-1 rounded-full text-sm font-medium border',
+							selectedFilter === filter
+								? 'bg-[#004aad] text-white border-[#004aad]'
+								: 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600',
+						]"
+					>
+						{{ filterLabels[filter] }}
+					</button>
+				</div>
+
+				<!-- Liste des activités filtrées -->
+				<div class="space-y-3">
+					<div
+						v-for="(a, i) in filteredActivities"
+						:key="i"
+						class="flex items-start p-3 bg-gray-50 dark:bg-gray-700 rounded-lg shadow-sm"
+					>
+						<!-- Icône action -->
+						<div
+							class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full"
+							:class="{
+								'bg-green-100 text-green-600': a.action === 'arrivee',
+								'bg-red-100 text-red-600': a.action === 'depart',
+								'bg-yellow-100 text-yellow-600': a.action.includes('pause'),
+							}"
+						>
+							<span class="text-xs font-bold">
+								{{
+									a.action === "arrivee"
+										? "A"
+										: a.action === "depart"
+										? "D"
+										: a.action === "pause_debut"
+										? "P"
+										: a.action === "pause_fin"
+										? "F"
+										: "?"
+								}}
+							</span>
+						</div>
+
+						<!-- Détails -->
+						<div class="ml-3">
+							<p class="text-sm font-medium text-gray-900 dark:text-white">
+								{{ a.personnel }} — {{ actionLabel(a.action) }}
+							</p>
+							<p class="text-xs text-gray-500 dark:text-gray-400">
+								{{ a.date }} à {{ a.time }}
+							</p>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -398,6 +434,42 @@
 		};
 		return days[day] || day;
 	};
+
+	// Filtres disponibles
+	const filters = ["all", "arrivee", "depart", "pause_debut", "pause_fin"];
+	const filterLabels = {
+		all: "Toutes",
+		arrivee: "Arrivée",
+		depart: "Départ",
+		pause_debut: "Début pause",
+		pause_fin: "Fin pause",
+	};
+
+	const selectedFilter = ref("all");
+
+	// Fonction pour afficher le label d'une action
+	const actionLabel = (action) => {
+		switch (action) {
+			case "arrivee":
+				return "Arrivée";
+			case "depart":
+				return "Départ";
+			case "pause_debut":
+				return "Début pause";
+			case "pause_fin":
+				return "Fin pause";
+			default:
+				return action;
+		}
+	};
+
+	// Activités filtrées selon le filtre sélectionné
+	const filteredActivities = computed(() => {
+		if (selectedFilter.value === "all") return dashboardStore.activities;
+		return dashboardStore.activities.filter(
+			(a) => a.action === selectedFilter.value,
+		);
+	});
 
 	// Chargement initial
 	onMounted(async () => {
