@@ -100,11 +100,16 @@
 							>Taux de présence</span
 						>
 						<span class="text-sm font-medium text-[#00bf63] dark:text-[#00e673]"
-							>75%</span
+							>{{ tauxPresence }}%</span
 						>
 					</div>
 					<div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-						<div class="bg-[#00bf63] h-2 rounded-full" style="width: 75%"></div>
+						<div
+							class="bg-[#00bf63] h-2 rounded-full"
+							:style="{
+								width: tauxPresence + '%',
+							}"
+						></div>
 					</div>
 				</div>
 			</div>
@@ -597,6 +602,10 @@
 	const totalPresents = computed(() => presenceStore.totalPresents);
 	const totalAbsents = computed(() => {
 		return totalPersonnel.value - totalPresents.value;
+	});
+	const tauxPresence = computed(() => {
+		if (totalPersonnel.value === 0) return 0;
+		return Math.round((totalPresents.value / totalPersonnel.value) * 100);
 	});
 
 	const refreshing = ref(false);
