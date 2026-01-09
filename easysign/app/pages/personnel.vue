@@ -362,7 +362,6 @@
 				<p><b>Nom :</b> {{ getFullName(selectedPerson) }}</p>
 				<p><b>Email :</b> {{ selectedPerson.email || "N/A" }}</p>
 				<p><b>Téléphone :</b> {{ selectedPerson.tel || "N/A" }}</p>
-				<p><b>Code :</b> {{ selectedPerson.qr_code }}</p>
 			</div>
 
 			<div class="flex justify-between gap-2 mt-6">
