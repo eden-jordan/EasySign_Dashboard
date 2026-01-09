@@ -36,7 +36,7 @@
 		</div>
 
 		<!-- Cartes de statistiques -->
-		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+		<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
 			<!-- Carte Total Personnel -->
 			<div
 				class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border-l-4 border-[#004aad]"
@@ -160,48 +160,6 @@
 							/>
 						</svg>
 						-8%
-					</span>
-					<span class="text-gray-500 dark:text-gray-400 ml-2">ce mois</span>
-				</div>
-			</div>
-
-			<!-- Carte Rapports Générés -->
-			<div
-				class="bg-white dark:bg-gray-800 rounded-xl shadow p-6 border-l-4 border-[#2E9AC8]"
-			>
-				<div class="flex items-center justify-between">
-					<div>
-						<p class="text-sm text-gray-500 dark:text-gray-400">
-							Rapports Générés
-						</p>
-						<p class="text-3xl font-bold text-gray-900 dark:text-white mt-2">
-							34
-						</p>
-					</div>
-					<div class="p-3 rounded-lg bg-[#2E9AC8]/10 dark:bg-[#2E9AC8]/20">
-						<svg
-							class="w-8 h-8 text-[#2E9AC8] dark:text-[#4ab3e6]"
-							fill="currentColor"
-							viewBox="0 0 20 20"
-						>
-							<path
-								fill-rule="evenodd"
-								d="M6 2a2 2 0 00-2 2v12a2 2 0 002 2h8a2 2 0 002-2V7.414A2 2 0 0015.414 6L12 2.586A2 2 0 0010.586 2H6zm5 6a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V8z"
-								clip-rule="evenodd"
-							/>
-						</svg>
-					</div>
-				</div>
-				<div class="mt-4 flex items-center text-sm">
-					<span class="text-[#00bf63] dark:text-[#00d673] flex items-center">
-						<svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-							<path
-								fill-rule="evenodd"
-								d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"
-								clip-rule="evenodd"
-							/>
-						</svg>
-						+23%
 					</span>
 					<span class="text-gray-500 dark:text-gray-400 ml-2">ce mois</span>
 				</div>

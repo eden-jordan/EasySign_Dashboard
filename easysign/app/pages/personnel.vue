@@ -307,69 +307,369 @@
 		</div>
 	</div>
 
+	<!-- Modal de création -->
 	<div
 		v-if="showCreateModal"
-		class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+		class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 backdrop-blur-sm transition-opacity duration-200"
 	>
-		<div class="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md">
-			<h2 class="text-xl font-bold mb-4">Ajouter un employé</h2>
+		<div
+			class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg transform transition-all duration-300 scale-100"
+		>
+			<div class="p-6 border-b border-gray-200 dark:border-gray-700">
+				<div class="flex items-center gap-3">
+					<div class="bg-[#003b8a] dark:bg-blue-900/30 p-2 rounded-lg"></div>
+					<h2 class="text-2xl font-bold text-gray-800 dark:text-white">
+						Ajouter un employé
+					</h2>
+				</div>
+				<p class="text-gray-500 dark:text-gray-400 text-sm mt-2 ml-11">
+					Remplissez les informations du nouvel employé
+				</p>
+			</div>
 
-			<input v-model="form.prenom" placeholder="Prénom" class="input" />
-			<input v-model="form.nom" placeholder="Nom" class="input" />
-			<input v-model="form.email" placeholder="Email" class="input" />
-			<input v-model="form.tel" placeholder="Téléphone" class="input" />
+			<div class="p-6 space-y-4">
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<div>
+						<label
+							class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+							>Prénom</label
+						>
+						<input
+							v-model="form.prenom"
+							placeholder="Ex: Jean"
+							class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-[#003b8a] focus:border-[#003b8a] outline-none transition"
+						/>
+					</div>
+					<div>
+						<label
+							class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+							>Nom</label
+						>
+						<input
+							v-model="form.nom"
+							placeholder="Ex: Dupont"
+							class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-[#003b8a] focus:border-[#003b8a] outline-none transition"
+						/>
+					</div>
+				</div>
 
-			<div class="flex justify-end gap-2 mt-4">
-				<button @click="showCreateModal = false" class="btn-gray">
+				<div>
+					<label
+						class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+						>Email</label
+					>
+					<input
+						v-model="form.email"
+						placeholder="jean.dupont@entreprise.com"
+						class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-[#003b8a] focus:border-[#003b8a] outline-none transition"
+					/>
+				</div>
+
+				<div>
+					<label
+						class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+						>Téléphone</label
+					>
+					<input
+						v-model="form.tel"
+						placeholder="01 23 45 67 89"
+						class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-[#003b8a] focus:border-[#003b8a] outline-none transition"
+					/>
+				</div>
+			</div>
+
+			<div
+				class="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 rounded-b-2xl flex justify-end gap-3"
+			>
+				<button
+					@click="showCreateModal = false"
+					class="px-5 py-2.5 rounded-lg font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+				>
 					Annuler
 				</button>
-				<button @click="submitCreate" class="btn-primary">
-					{{ actionLoading ? "Création..." : "Créer" }}
+				<button
+					@click="submitCreate"
+					:disabled="actionLoading"
+					class="px-5 py-2.5 rounded-lg font-medium text-white bg-[#003b8a] hover:bg-blue-700 focus:ring-2 focus:ring-[#003b8a] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+				>
+					<span class="flex items-center gap-2">
+						<svg
+							v-if="actionLoading"
+							class="animate-spin h-4 w-4 text-white"
+							fill="none"
+							viewBox="0 0 24 24"
+						>
+							<circle
+								class="opacity-25"
+								cx="12"
+								cy="12"
+								r="10"
+								stroke="currentColor"
+								stroke-width="4"
+							></circle>
+							<path
+								class="opacity-75"
+								fill="currentColor"
+								d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+							></path>
+						</svg>
+						{{ actionLoading ? "Création..." : "Créer l'employé" }}
+					</span>
 				</button>
 			</div>
 		</div>
 	</div>
 
+	<!-- Modal d'édition -->
 	<div
 		v-if="showEditModal"
-		class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+		class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 backdrop-blur-sm transition-opacity duration-200"
 	>
-		<div class="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md">
-			<h2 class="text-xl font-bold mb-4">Modifier employé</h2>
+		<div
+			class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg transform transition-all duration-300 scale-100"
+		>
+			<div class="p-6 border-b border-gray-200 dark:border-gray-700">
+				<div class="flex items-center gap-3">
+					<div class="bg-[#003b8a] dark:bg-blue-900/30 p-2 rounded-lg"></div>
+					<h2 class="text-2xl font-bold text-gray-800 dark:text-white">
+						Modifier employé
+					</h2>
+				</div>
+				<p class="text-gray-500 dark:text-gray-400 text-sm mt-2 ml-11">
+					Modifiez les informations de l'employé
+				</p>
+			</div>
 
-			<input v-model="form.prenom" class="input" />
-			<input v-model="form.nom" class="input" />
-			<input v-model="form.email" class="input" />
-			<input v-model="form.tel" class="input" />
+			<div class="p-6 space-y-4">
+				<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+					<div>
+						<label
+							class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+							>Prénom</label
+						>
+						<input
+							v-model="form.prenom"
+							class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-[#003b8a] focus:border-[#003b8a] outline-none transition"
+						/>
+					</div>
+					<div>
+						<label
+							class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+							>Nom</label
+						>
+						<input
+							v-model="form.nom"
+							class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-[#003b8a] focus:border-[#003b8a] outline-none transition"
+						/>
+					</div>
+				</div>
 
-			<div class="flex justify-end gap-2 mt-4">
-				<button @click="showEditModal = false" class="btn-gray">Annuler</button>
-				<button @click="submitUpdate" class="btn-primary">
-					{{ actionLoading ? "Sauvegarde..." : "Enregistrer" }}
+				<div>
+					<label
+						class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+						>Email</label
+					>
+					<input
+						v-model="form.email"
+						class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-[#003b8a] focus:border-[#003b8a] outline-none transition"
+					/>
+				</div>
+
+				<div>
+					<label
+						class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+						>Téléphone</label
+					>
+					<input
+						v-model="form.tel"
+						class="w-full px-4 py-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 text-gray-800 dark:text-white focus:ring-2 focus:ring-[#003b8a] focus:border-[#003b8a] outline-none transition"
+					/>
+				</div>
+			</div>
+
+			<div
+				class="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 rounded-b-2xl flex justify-end gap-3"
+			>
+				<button
+					@click="showEditModal = false"
+					class="px-5 py-2.5 rounded-lg font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+				>
+					Annuler
+				</button>
+				<button
+					@click="submitUpdate"
+					:disabled="actionLoading"
+					class="px-5 py-2.5 rounded-lg font-medium text-white bg-[#003b8a] hover:bg-blue-700 focus:ring-2 focus:ring-[#003b8a] focus:ring-offset-2 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+				>
+					<span class="flex items-center gap-2">
+						<svg
+							v-if="actionLoading"
+							class="animate-spin h-4 w-4 text-white"
+							fill="none"
+							viewBox="0 0 24 24"
+						>
+							<circle
+								class="opacity-25"
+								cx="12"
+								cy="12"
+								r="10"
+								stroke="currentColor"
+								stroke-width="4"
+							></circle>
+							<path
+								class="opacity-75"
+								fill="currentColor"
+								d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+							></path>
+						</svg>
+						{{ actionLoading ? "Sauvegarde..." : "Enregistrer" }}
+					</span>
 				</button>
 			</div>
 		</div>
 	</div>
 
+	<!-- Modal de détails -->
 	<div
 		v-if="showDetailModal"
-		class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+		class="fixed inset-0 bg-black/70 flex items-center justify-center z-50 p-4 backdrop-blur-sm transition-opacity duration-200"
 	>
-		<div class="bg-white dark:bg-gray-800 rounded-xl p-6 w-full max-w-md">
-			<h2 class="text-xl font-bold mb-4">Détails employé</h2>
-
-			<div v-if="selectedPerson">
-				<p><b>Nom :</b> {{ getFullName(selectedPerson) }}</p>
-				<p><b>Email :</b> {{ selectedPerson.email || "N/A" }}</p>
-				<p><b>Téléphone :</b> {{ selectedPerson.tel || "N/A" }}</p>
+		<div
+			class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl w-full max-w-lg transform transition-all duration-300 scale-100"
+		>
+			<div class="p-6 border-b border-gray-200 dark:border-gray-700">
+				<div class="flex items-center gap-3">
+					<div class="bg-[#003b8a] dark:bg-blue-900/30 p-2 rounded-lg"></div>
+					<h2 class="text-2xl font-bold text-gray-800 dark:text-white">
+						Détails employé
+					</h2>
+				</div>
+				<p class="text-gray-500 dark:text-gray-400 text-sm mt-2 ml-11">
+					Informations détaillées de l'employé
+				</p>
 			</div>
 
-			<div class="flex justify-between gap-2 mt-6">
-				<button @click="generateBadge(selectedPerson)" class="btn-primary">
+			<div class="p-6" v-if="selectedPerson">
+				<div class="space-y-5">
+					<div
+						class="flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-700/30 rounded-xl"
+					>
+						<div class="bg-blue-100 dark:bg-blue-900/20 p-3 rounded-lg">
+							<svg
+								class="w-5 h-5 text-[#003b8a] dark:text-[#003b8a]"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+								></path>
+							</svg>
+						</div>
+						<div>
+							<p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+								Nom complet
+							</p>
+							<p
+								class="text-lg font-semibold text-gray-800 dark:text-white mt-1"
+							>
+								{{ getFullName(selectedPerson) }}
+							</p>
+						</div>
+					</div>
+
+					<div
+						class="flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-700/30 rounded-xl"
+					>
+						<div class="bg-blue-100 dark:bg-blue-900/20 p-3 rounded-lg">
+							<svg
+								class="w-5 h-5 text-[#003b8a] dark:text-[#003b8a]"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
+								></path>
+							</svg>
+						</div>
+						<div>
+							<p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+								Email
+							</p>
+							<p
+								class="text-lg font-semibold text-gray-800 dark:text-white mt-1"
+							>
+								{{ selectedPerson.email || "Non renseigné" }}
+							</p>
+						</div>
+					</div>
+
+					<div
+						class="flex items-start gap-4 p-4 bg-gray-50 dark:bg-gray-700/30 rounded-xl"
+					>
+						<div class="bg-blue-100 dark:bg-blue-900/20 p-3 rounded-lg">
+							<svg
+								class="w-5 h-5 text-[#003b8a] dark:text-[#003b8a]"
+								fill="none"
+								stroke="currentColor"
+								viewBox="0 0 24 24"
+							>
+								<path
+									stroke-linecap="round"
+									stroke-linejoin="round"
+									stroke-width="2"
+									d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"
+								></path>
+							</svg>
+						</div>
+						<div>
+							<p class="text-sm font-medium text-gray-500 dark:text-gray-400">
+								Téléphone
+							</p>
+							<p
+								class="text-lg font-semibold text-gray-800 dark:text-white mt-1"
+							>
+								{{ selectedPerson.tel || "Non renseigné" }}
+							</p>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			<div
+				class="px-6 py-4 bg-gray-50 dark:bg-gray-700/50 rounded-b-2xl flex justify-between gap-3"
+			>
+				<button
+					@click="generateBadge(selectedPerson)"
+					class="px-5 py-2.5 rounded-lg font-medium text-white bg-[#003b8a] hover:bg-blue-700 focus:ring-2 focus:ring-[#003b8a] focus:ring-offset-2 transition-all duration-200 flex items-center gap-2"
+				>
+					<svg
+						class="w-5 h-5"
+						fill="none"
+						stroke="currentColor"
+						viewBox="0 0 24 24"
+					>
+						<path
+							stroke-linecap="round"
+							stroke-linejoin="round"
+							stroke-width="2"
+							d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"
+						></path>
+					</svg>
 					Générer badge
 				</button>
 
-				<button @click="showDetailModal = false" class="btn-gray">
+				<button
+					@click="showDetailModal = false"
+					class="px-5 py-2.5 rounded-lg font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors duration-200"
+				>
 					Fermer
 				</button>
 			</div>
