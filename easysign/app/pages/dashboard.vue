@@ -204,6 +204,7 @@
 						Activités Récentes
 					</h3>
 					<button
+						@click="showModal = true"
 						class="text-sm text-[#004aad] dark:text-[#4a8cff] hover:text-[#003b8a] dark:hover:text-[#3a7cff]"
 					>
 						Voir toutes
@@ -227,14 +228,13 @@
 					</button>
 				</div>
 
-				<!-- Liste des activités filtrées -->
-				<div class="space-y-3">
+				<!-- Liste des 10 activités filtrées -->
+				<div class="space-y-3 max-h-[500px] overflow-y-auto">
 					<div
-						v-for="(a, i) in filteredActivities"
+						v-for="(a, i) in filteredActivities.slice(0, 10)"
 						:key="i"
 						class="flex items-start p-3 bg-gray-50 dark:bg-gray-700 rounded-lg shadow-sm"
 					>
-						<!-- Icône action -->
 						<div
 							class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full"
 							:class="{
@@ -257,8 +257,6 @@
 								}}
 							</span>
 						</div>
-
-						<!-- Détails -->
 						<div class="ml-3">
 							<p class="text-sm font-medium text-gray-900 dark:text-white">
 								{{ a.personnel }} — {{ actionLabel(a.action) }}
@@ -269,6 +267,90 @@
 						</div>
 					</div>
 				</div>
+
+				<!-- Modal pour toutes les activités -->
+				<transition name="fade">
+					<div
+						v-if="showModal"
+						class="fixed inset-0 bg-black/50 flex items-center justify-center z-50"
+					>
+						<div
+							class="bg-white dark:bg-gray-800 w-full max-w-2xl p-6 rounded-xl shadow-lg relative"
+						>
+							<button
+								@click="showModal = false"
+								class="absolute top-4 right-4 text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-white"
+							>
+								✕
+							</button>
+							<h3
+								class="text-lg font-semibold text-gray-900 dark:text-white mb-4"
+							>
+								Toutes les Activités
+							</h3>
+
+							<!-- Filtre actions dans le modal -->
+							<div class="flex gap-2 mb-4 flex-wrap">
+								<button
+									v-for="filter in filters"
+									:key="filter + '-modal'"
+									@click="selectedFilter = filter"
+									:class="[
+										'px-3 py-1 rounded-full text-sm font-medium border',
+										selectedFilter === filter
+											? 'bg-[#004aad] text-white border-[#004aad]'
+											: 'bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 border-gray-300 dark:border-gray-600',
+									]"
+								>
+									{{ filterLabels[filter] }}
+								</button>
+							</div>
+
+							<!-- Liste complète des activités filtrées -->
+							<div class="space-y-3 max-h-[400px] overflow-y-auto">
+								<div
+									v-for="(a, i) in filteredActivities"
+									:key="'modal-' + i"
+									class="flex items-start p-3 bg-gray-50 dark:bg-gray-700 rounded-lg shadow-sm"
+								>
+									<div
+										class="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-full"
+										:class="{
+											'bg-green-100 text-green-600': a.action === 'arrivee',
+											'bg-red-100 text-red-600': a.action === 'depart',
+											'bg-yellow-100 text-yellow-600':
+												a.action.includes('pause'),
+										}"
+									>
+										<span class="text-xs font-bold">
+											{{
+												a.action === "arrivee"
+													? "A"
+													: a.action === "depart"
+													? "D"
+													: a.action === "pause_debut"
+													? "P"
+													: a.action === "pause_fin"
+													? "F"
+													: "?"
+											}}
+										</span>
+									</div>
+									<div class="ml-3">
+										<p
+											class="text-sm font-medium text-gray-900 dark:text-white"
+										>
+											{{ a.personnel }} — {{ actionLabel(a.action) }}
+										</p>
+										<p class="text-xs text-gray-500 dark:text-gray-400">
+											{{ a.date }} à {{ a.time }}
+										</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</transition>
 			</div>
 		</div>
 
@@ -284,6 +366,7 @@
 					<!-- Action 1 -->
 					<button
 						class="w-full bg-[#004aad]/5 dark:bg-[#004aad]/10 hover:bg-[#004aad]/10 dark:hover:bg-[#004aad]/20 text-[#004aad] dark:text-[#4a8cff] rounded-lg p-4 flex items-center transition duration-200"
+						@click="goToPersonnel"
 					>
 						<div
 							class="w-12 h-12 rounded-lg bg-[#004aad]/10 dark:bg-[#004aad]/20 flex items-center justify-center mr-4"
@@ -309,6 +392,7 @@
 					<!-- Action 2 -->
 					<button
 						class="w-full bg-[#2E9AC8]/5 dark:bg-[#2E9AC8]/10 hover:bg-[#2E9AC8]/10 dark:hover:bg-[#2E9AC8]/20 text-[#2E9AC8] dark:text-[#4ab3e6] rounded-lg p-4 flex items-center transition duration-200"
+						@click="goToPresences"
 					>
 						<div
 							class="w-12 h-12 rounded-lg bg-[#2E9AC8]/10 dark:bg-[#2E9AC8]/20 flex items-center justify-center mr-4"
@@ -326,14 +410,15 @@
 							</svg>
 						</div>
 						<div class="text-left">
-							<p class="font-medium">Marquer Présence</p>
-							<p class="text-sm opacity-75">Enregistrement</p>
+							<p class="font-medium">Voir Présences</p>
+							<p class="text-sm opacity-75">Gestion</p>
 						</div>
 					</button>
 
 					<!-- Action 3 -->
 					<button
 						class="w-full bg-[#2E9AC8]/5 dark:bg-[#2E9AC8]/10 hover:bg-[#2E9AC8]/10 dark:hover:bg-[#2E9AC8]/20 text-[#2E9AC8] dark:text-[#4ab3e6] rounded-lg p-4 flex items-center transition duration-200"
+						@click="goToRapports"
 					>
 						<div
 							class="w-12 h-12 rounded-lg bg-[#2E9AC8]/10 dark:bg-[#2E9AC8]/20 flex items-center justify-center mr-4"
@@ -359,6 +444,7 @@
 					<!-- Action 4 -->
 					<button
 						class="w-full bg-[#004aad]/5 dark:bg-[#004aad]/10 hover:bg-[#004aad]/10 dark:hover:bg-[#004aad]/20 text-[#004aad] dark:text-[#4a8cff] rounded-lg p-4 flex items-center transition duration-200"
+						@click="goToOrganisations"
 					>
 						<div
 							class="w-12 h-12 rounded-lg bg-[#004aad]/10 dark:bg-[#004aad]/20 flex items-center justify-center mr-4"
@@ -387,10 +473,27 @@
 </template>
 
 <script setup>
-	import { ref } from "vue";
+	import { ref, onMounted } from "vue";
+	import { useRouter } from "vue-router";
+
 	import { usePersonnelStore } from "~~/stores/personnel";
 	import { usePresenceStore } from "~~/stores/presence";
 	import { useDashboardStore } from "~~/stores/dashboard";
+
+	const router = useRouter();
+
+	const goToPersonnel = () => {
+		router.push("/personnel");
+	};
+	const goToPresences = () => {
+		router.push("/presences");
+	};
+	const goToRapports = () => {
+		router.push("/rapports");
+	};
+	const goToOrganisations = () => {
+		router.push("/organisations");
+	};
 
 	const dashboardStore = useDashboardStore();
 	const personnelStore = usePersonnelStore();
@@ -435,7 +538,7 @@
 		return days[day] || day;
 	};
 
-	// Filtres disponibles
+	// Filtres
 	const filters = ["all", "arrivee", "depart", "pause_debut", "pause_fin"];
 	const filterLabels = {
 		all: "Toutes",
@@ -447,7 +550,9 @@
 
 	const selectedFilter = ref("all");
 
-	// Fonction pour afficher le label d'une action
+	// Modal
+	const showModal = ref(false);
+
 	const actionLabel = (action) => {
 		switch (action) {
 			case "arrivee":
@@ -463,7 +568,7 @@
 		}
 	};
 
-	// Activités filtrées selon le filtre sélectionné
+	// Activités filtrées
 	const filteredActivities = computed(() => {
 		if (selectedFilter.value === "all") return dashboardStore.activities;
 		return dashboardStore.activities.filter(

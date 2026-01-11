@@ -4,7 +4,7 @@ export default defineNuxtPlugin((nuxtApp) => {
 	const auth = useAuthStore();
 
 	const api = $fetch.create({
-		baseURL: "http://192.168.10.112:8000/api",
+		baseURL: "http://192.168.1.64:8000/api",
 
 		onRequest({ options }) {
 			// Si le store n'est pas encore initialisé

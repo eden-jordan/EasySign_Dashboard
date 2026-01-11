@@ -27,7 +27,7 @@
 						<div>
 							<p class="text-sm text-gray-500 dark:text-gray-400">Présents</p>
 							<p class="text-3xl font-bold text-gray-900 dark:text-white mt-2">
-								186
+								{{ totalPresents }}
 							</p>
 						</div>
 						<div class="p-3 rounded-lg bg-[#00bf63]/10 dark:bg-[#00bf63]/20">
@@ -51,17 +51,16 @@
 							>
 							<span
 								class="text-sm font-medium text-[#00bf63] dark:text-[#00e673]"
-								>75%</span
+								>{{ tauxPresence }}%</span
 							>
 						</div>
 						<div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
 							<div
 								class="bg-[#00bf63] h-2 rounded-full"
-								style="width: 75%"
+								:style="{
+									width: tauxPresence + '%',
+								}"
 							></div>
-						</div>
-						<div class="mt-2 text-sm text-gray-500 dark:text-gray-400">
-							ce mois
 						</div>
 					</div>
 				</div>
@@ -74,7 +73,7 @@
 						<div>
 							<p class="text-sm text-gray-500 dark:text-gray-400">Absents</p>
 							<p class="text-3xl font-bold text-gray-900 dark:text-white mt-2">
-								62
+								{{ totalAbsents }}
 							</p>
 						</div>
 						<div class="p-3 rounded-lg bg-[#e61c0e]/10 dark:bg-[#e61c0e]/20">
@@ -90,19 +89,6 @@
 								/>
 							</svg>
 						</div>
-					</div>
-					<div class="mt-4 flex items-center text-sm">
-						<span class="text-[#e61c0e] dark:text-[#ff4d4d] flex items-center">
-							<svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-								<path
-									fill-rule="evenodd"
-									d="M12 13a1 1 0 100 2h5a1 1 0 001-1V9a1 1 0 10-2 0v2.586l-4.293-4.293a1 1 0 00-1.414 0L8 9.586l-4.293-4.293a1 1 0 00-1.414 1.414l5 5a1 1 0 001.414 0L11 9.414 14.586 13H12z"
-									clip-rule="evenodd"
-								/>
-							</svg>
-							-8%
-						</span>
-						<span class="text-gray-500 dark:text-gray-400 ml-2">ce mois</span>
 					</div>
 				</div>
 
@@ -130,19 +116,6 @@
 								/>
 							</svg>
 						</div>
-					</div>
-					<div class="mt-4 flex items-center text-sm">
-						<span class="text-[#00bf63] dark:text-[#00d673] flex items-center">
-							<svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-								<path
-									fill-rule="evenodd"
-									d="M12 7a1 1 0 110-2h5a1 1 0 011 1v5a1 1 0 11-2 0V8.414l-4.293 4.293a1 1 0 01-1.414 0L8 10.414l-4.293 4.293a1 1 0 01-1.414-1.414l5-5a1 1 0 011.414 0L11 10.586 14.586 7H12z"
-									clip-rule="evenodd"
-								/>
-							</svg>
-							+15%
-						</span>
-						<span class="text-gray-500 dark:text-gray-400 ml-2">ce mois</span>
 					</div>
 				</div>
 			</div>
@@ -195,20 +168,19 @@
 						</div>
 						<input
 							type="text"
-							class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-[#004aad] focus:border-[#004aad] block w-24 pl-10 p-2.5"
+							class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-[#004aad] focus:border-[#004aad] block w-48 pl-10 p-2.5"
 							value="06/01/2026"
 						/>
 					</div>
 
 					<!-- Filtre statut -->
 					<select
-						class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-[#004aad] focus:border-[#004aad] p-2.5 w-24"
+						class="bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white text-sm rounded-lg focus:ring-[#004aad] focus:border-[#004aad] p-2.5 w-48"
 					>
 						<option selected>Tous les statuts</option>
 						<option>Présent</option>
 						<option>Absent</option>
 						<option>Retard</option>
-						<option>Congé</option>
 					</select>
 				</div>
 			</div>
@@ -229,12 +201,6 @@
 								</th>
 								<th
 									scope="col"
-									class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider min-w-[150px]"
-								>
-									Département
-								</th>
-								<th
-									scope="col"
 									class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider min-w-[120px]"
 								>
 									Date
@@ -249,25 +215,25 @@
 									scope="col"
 									class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider min-w-[120px]"
 								>
-									Heure de départ
+									Heure de Début-Pause
 								</th>
 								<th
 									scope="col"
-									class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider min-w-[110px]"
+									class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider min-w-[120px]"
 								>
-									Durée
+									Heure de Fin-Pause
+								</th>
+								<th
+									scope="col"
+									class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider min-w-[120px]"
+								>
+									Heure de départ
 								</th>
 								<th
 									scope="col"
 									class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider min-w-[100px]"
 								>
 									Statut
-								</th>
-								<th
-									scope="col"
-									class="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider min-w-[120px]"
-								>
-									Actions
 								</th>
 							</tr>
 						</thead>
@@ -276,7 +242,7 @@
 						>
 							<!-- Marie Dubois -->
 							<tr
-								class="hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+								class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
 							>
 								<td class="px-4 py-3 whitespace-nowrap">
 									<div class="flex items-center space-x-3">
@@ -296,15 +262,7 @@
 											>
 												Marie Dubois
 											</div>
-											<div class="text-xs text-gray-500 dark:text-gray-400">
-												Responsable RH
-											</div>
 										</div>
-									</div>
-								</td>
-								<td class="px-4 py-3">
-									<div class="text-sm text-gray-900 dark:text-white">
-										Ressources Humaines
 									</div>
 								</td>
 								<td class="px-4 py-3">
@@ -323,14 +281,21 @@
 									<div
 										class="text-sm font-medium text-gray-900 dark:text-white"
 									>
-										17:30
+										12:00
 									</div>
 								</td>
 								<td class="px-4 py-3">
 									<div
-										class="text-sm font-medium text-green-600 dark:text-green-400"
+										class="text-sm font-medium text-gray-900 dark:text-white"
 									>
-										8h 45min
+										14:30
+									</div>
+								</td>
+								<td class="px-4 py-3">
+									<div
+										class="text-sm font-medium text-gray-900 dark:text-white"
+									>
+										17:30
 									</div>
 								</td>
 								<td class="px-4 py-3">
@@ -340,45 +305,11 @@
 										Présent
 									</span>
 								</td>
-								<td class="px-4 py-3">
-									<div class="flex space-x-2">
-										<button
-											class="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-[#004aad] dark:text-[#4a8cff] hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all"
-											title="Modifier"
-										>
-											<svg
-												class="w-4 h-4"
-												fill="currentColor"
-												viewBox="0 0 20 20"
-											>
-												<path
-													d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
-												/>
-											</svg>
-										</button>
-										<button
-											class="p-2 rounded-lg bg-red-50 dark:bg-red-900/20 text-[#e61c0e] dark:text-[#ff4d4d] hover:bg-red-100 dark:hover:bg-red-900/30 transition-all"
-											title="Supprimer"
-										>
-											<svg
-												class="w-4 h-4"
-												fill="currentColor"
-												viewBox="0 0 20 20"
-											>
-												<path
-													fill-rule="evenodd"
-													d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-													clip-rule="evenodd"
-												/>
-											</svg>
-										</button>
-									</div>
-								</td>
 							</tr>
 
 							<!-- Jean Martin -->
 							<tr
-								class="hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+								class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
 							>
 								<td class="px-4 py-3 whitespace-nowrap">
 									<div class="flex items-center space-x-3">
@@ -398,15 +329,7 @@
 											>
 												Jean Martin
 											</div>
-											<div class="text-xs text-gray-500 dark:text-gray-400">
-												Développeur Senior
-											</div>
 										</div>
-									</div>
-								</td>
-								<td class="px-4 py-3">
-									<div class="text-sm text-gray-900 dark:text-white">
-										Informatique
 									</div>
 								</td>
 								<td class="px-4 py-3">
@@ -425,14 +348,21 @@
 									<div
 										class="text-sm font-medium text-gray-900 dark:text-white"
 									>
-										18:00
+										12:00
 									</div>
 								</td>
 								<td class="px-4 py-3">
 									<div
-										class="text-sm font-medium text-green-600 dark:text-green-400"
+										class="text-sm font-medium text-gray-900 dark:text-white"
 									>
-										8h 45min
+										14:30
+									</div>
+								</td>
+								<td class="px-4 py-3">
+									<div
+										class="text-sm font-medium text-gray-900 dark:text-white"
+									>
+										18:00
 									</div>
 								</td>
 								<td class="px-4 py-3">
@@ -442,45 +372,11 @@
 										Retard
 									</span>
 								</td>
-								<td class="px-4 py-3">
-									<div class="flex space-x-2">
-										<button
-											class="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-[#004aad] dark:text-[#4a8cff] hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all"
-											title="Modifier"
-										>
-											<svg
-												class="w-4 h-4"
-												fill="currentColor"
-												viewBox="0 0 20 20"
-											>
-												<path
-													d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
-												/>
-											</svg>
-										</button>
-										<button
-											class="p-2 rounded-lg bg-red-50 dark:bg-red-900/20 text-[#e61c0e] dark:text-[#ff4d4d] hover:bg-red-100 dark:hover:bg-red-900/30 transition-all"
-											title="Supprimer"
-										>
-											<svg
-												class="w-4 h-4"
-												fill="currentColor"
-												viewBox="0 0 20 20"
-											>
-												<path
-													fill-rule="evenodd"
-													d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-													clip-rule="evenodd"
-												/>
-											</svg>
-										</button>
-									</div>
-								</td>
 							</tr>
 
 							<!-- Sophie Laurent -->
 							<tr
-								class="hover:bg-gray-50 dark:hover:bg-gray-750 transition-colors"
+								class="hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
 							>
 								<td class="px-4 py-3 whitespace-nowrap">
 									<div class="flex items-center space-x-3">
@@ -500,20 +396,19 @@
 											>
 												Sophie Laurent
 											</div>
-											<div class="text-xs text-gray-500 dark:text-gray-400">
-												Chef de Projet
-											</div>
 										</div>
 									</div>
 								</td>
 								<td class="px-4 py-3">
 									<div class="text-sm text-gray-900 dark:text-white">
-										Marketing
+										15/01/2024
 									</div>
 								</td>
 								<td class="px-4 py-3">
-									<div class="text-sm text-gray-900 dark:text-white">
-										15/01/2024
+									<div
+										class="text-sm font-medium text-gray-400 dark:text-gray-500"
+									>
+										-
 									</div>
 								</td>
 								<td class="px-4 py-3">
@@ -543,40 +438,6 @@
 									>
 										Absent
 									</span>
-								</td>
-								<td class="px-4 py-3">
-									<div class="flex space-x-2">
-										<button
-											class="p-2 rounded-lg bg-blue-50 dark:bg-blue-900/20 text-[#004aad] dark:text-[#4a8cff] hover:bg-blue-100 dark:hover:bg-blue-900/30 transition-all"
-											title="Modifier"
-										>
-											<svg
-												class="w-4 h-4"
-												fill="currentColor"
-												viewBox="0 0 20 20"
-											>
-												<path
-													d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"
-												/>
-											</svg>
-										</button>
-										<button
-											class="p-2 rounded-lg bg-red-50 dark:bg-red-900/20 text-[#e61c0e] dark:text-[#ff4d4d] hover:bg-red-100 dark:hover:bg-red-900/30 transition-all"
-											title="Supprimer"
-										>
-											<svg
-												class="w-4 h-4"
-												fill="currentColor"
-												viewBox="0 0 20 20"
-											>
-												<path
-													fill-rule="evenodd"
-													d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z"
-													clip-rule="evenodd"
-												/>
-											</svg>
-										</button>
-									</div>
 								</td>
 							</tr>
 
@@ -639,6 +500,31 @@
 </template>
 
 <script setup>
+	import { ref, onMounted } from "vue";
+
+	import { usePersonnelStore } from "~~/stores/personnel";
+	import { usePresenceStore } from "~~/stores/presence";
+	import { useDashboardStore } from "~~/stores/dashboard";
+
+	const dashboardStore = useDashboardStore();
+	const personnelStore = usePersonnelStore();
+	const presenceStore = usePresenceStore();
+	const totalPersonnel = computed(() => personnelStore.count);
+	const totalPresents = computed(() => presenceStore.totalPresents);
+	const totalAbsents = computed(() => {
+		return totalPersonnel.value - totalPresents.value;
+	});
+	const tauxPresence = computed(() => {
+		if (totalPersonnel.value === 0) return 0;
+		return Math.round((totalPresents.value / totalPersonnel.value) * 100);
+	});
+
+	// Chargement initial
+	onMounted(async () => {
+		await personnelStore.getPersonnel();
+		await presenceStore.getTodayPresences();
+		await dashboardStore.loadStats();
+	});
 	definePageMeta({
 		middleware: "auth",
 	});
